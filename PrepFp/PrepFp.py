@@ -1,5 +1,7 @@
 from abc import ABC,abstractmethod
+import dpdata
 from contextlib import contextmanager
+from pathlib import Path
 from dflow.python import (
     PythonOPTemplate,
     OP,
@@ -10,17 +12,6 @@ from dflow.python import (
     FatalError,
     BigParameter,
 )
-from dflow import (
-    Workflow,
-    Step,
-    upload_artifact,
-    download_artifact,
-    InputArtifact,
-    OutputArtifact,
-    ShellOPTemplate
-)
-import os, json, dpdata
-from pathlib import Path
 from typing import (
     Any,
     Tuple,
@@ -29,14 +20,6 @@ from typing import (
     Dict,
     Optional,
     Union,
-)
-import numpy as np
-import dargs
-from dargs import (
-    dargs,
-    Argument,
-    Variant,
-    ArgumentEncoder,
 )
 
 # global static variables
