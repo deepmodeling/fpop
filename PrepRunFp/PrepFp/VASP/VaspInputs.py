@@ -8,6 +8,7 @@ from typing import (
     Union,
 )
 import numpy as np
+from pathlib import Path
 
 class VaspInputs():
     def __init__(

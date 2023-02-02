@@ -1,4 +1,8 @@
+import sys,os
+sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__),"../../")))
+
 from abc import ABC,abstractmethod
+import os
 import dpdata
 from contextlib import contextmanager
 from pathlib import Path
@@ -21,10 +25,6 @@ from typing import (
     Optional,
     Union,
 )
-
-# global static variables
-fp_index_pattern = '%06d'
-fp_task_pattern = 'task.' + fp_index_pattern
 
 @contextmanager
 def set_directory(path: Path):
@@ -150,7 +150,7 @@ class PrepFp(OP, ABC):
             inputs,
             conf_frame : dpdata.System,
     ) -> Tuple[str, Path]:
-        task_name = fp_task_pattern % idx
+        task_name = 'task.' + '%06d' % idx
         task_path = Path(task_name)
         with set_directory(task_path):
             self.prep_task(conf_frame, inputs)

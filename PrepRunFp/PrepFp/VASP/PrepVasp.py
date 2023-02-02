@@ -1,8 +1,10 @@
-import sys
-sys.path.append("..")
-from PrepFp import PrepFp
-from VaspInputs import VaspInputs
+import sys,os
+sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__),"../../../")))
+
+from PrepRunFp.PrepFp.PrepFp import PrepFp
+from PrepRunFp.PrepFp.VASP.VaspInputs import VaspInputs
 import dpdata
+from pathlib import Path
 
 class PrepVasp(PrepFp):
     def prep_task(
@@ -20,15 +22,15 @@ class PrepVasp(PrepFp):
             The VaspInputs object handels all other input files of the task.
         """
 
-        conf_frame.to('vasp/poscar', vasp_conf_name)
-        Path(vasp_input_name).write_text(
+        conf_frame.to('vasp/poscar', 'POSCAR')
+        Path('INCAR').write_text(
             vasp_inputs.incar_template
         )
         # fix the case when some element have 0 atom, e.g. H0O2
-        tmp_frame = dpdata.System(vasp_conf_name, fmt='vasp/poscar')
-        Path(vasp_pot_name).write_text(
+        tmp_frame = dpdata.System('POSCAR', fmt='vasp/poscar')
+        Path('POTCAR').write_text(
             vasp_inputs.make_potcar(tmp_frame['atom_names'])
         )
-        Path(vasp_kp_name).write_text(
+        Path('KPOINTS').write_text(
             vasp_inputs.make_kpoints(conf_frame['cells'][0])
         )
