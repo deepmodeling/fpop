@@ -3,9 +3,9 @@ from dflow.plugins import bohrium
 from dflow.plugins.bohrium import TiefblueClient
 config["host"] = "https://workflows.deepmodeling.com"
 config["k8s_api_server"] = "https://workflows.deepmodeling.com"
-bohrium.config["username"] = "xxxxx"
-bohrium.config["password"] = "xxxxx"
-bohrium.config["project_id"] = xxxx
+bohrium.config["username"] = "xxxxxx"
+bohrium.config["password"] = "xxxxxx"
+bohrium.config["project_id"] = xxxxx
 s3_config["repo_key"] = "oss-bohrium"
 s3_config["storage_client"] = TiefblueClient()
 
