@@ -1,3 +1,5 @@
+import sys
+sys.path.append("..")
 from PrepFp import PrepFp
 from VaspInputs import VaspInputs
 import dpdata
