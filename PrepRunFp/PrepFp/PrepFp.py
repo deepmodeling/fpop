@@ -60,9 +60,11 @@ class PrepFp(OP, ABC):
     @classmethod
     def get_input_sign(cls):
         return OPIOSign({
-            "config" : BigParameter(dict),
+            "inputs" : BigParameter(object),
             "type_map": List[str],
             "confs" : Artifact(List[Path]),
+            "optional_input" : BigParameter(dict),
+            "optional_artifact" : Artifact(Dict[str,Path],optional=True)
         })
 
     @classmethod
@@ -115,26 +117,29 @@ class PrepFp(OP, ABC):
             - `task_paths`: (`Artifact(List[Path])`) The parepared working paths of the tasks. Contains all input files needed to start the FP. The order fo the Paths should be consistent with `op["task_names"]`
         """
 
-        inputs = ip['config']['inputs']
+        inputs = ip['inputs']
         confs = ip['confs']
         type_map = ip['type_map']
+        optional_artifact = ip["optional_artifact"]
+        try:
+            conf_format = ip["optional_input"]["conf_format"]
+        except:
+            conf_format = "deepmd/npy"
 
         task_names = []
         task_paths = []
-        counter=0
-        # loop over list of MultiSystems
-        for mm in confs:
-            ms = dpdata.MultiSystems(type_map=type_map)
-            ms.from_deepmd_npy(mm, labeled=False)
-            # loop over Systems in MultiSystems
-            for ii in range(len(ms)):
-                ss = ms[ii]
-                # loop over frames
-                for ff in range(ss.get_nframes()):
-                    nn, pp = self._exec_one_frame(counter, inputs, ss[ff])
-                    task_names.append(nn)
-                    task_paths.append(pp)
-                    counter += 1
+
+        #System
+        counter = 0
+        # loop over list of System
+        for system in confs:
+            ss = dpdata.System(system, fmt=conf_format, labeled=False)
+            for ff in range(ss.get_nframes()):
+                nn, pp = self._exec_one_frame(counter, inputs, ss[ff], optional_artifact)
+                task_names.append(nn)
+                task_paths.append(pp)
+                counter += 1
+
         return OPIO({
             'task_names' : task_names,
             'task_paths' : task_paths,
@@ -146,9 +151,19 @@ class PrepFp(OP, ABC):
             idx,
             inputs,
             conf_frame : dpdata.System,
+            optional_files=[],
     ) -> Tuple[str, Path]:
         task_name = 'task.' + '%06d' % idx
         task_path = Path(task_name)
         with set_directory(task_path):
             self.prep_task(conf_frame, inputs)
+            self.prep_optional_files(optional_files)
         return task_name, task_path
+
+    def prep_optional_files(
+        self,
+        optional_artifact : Dict
+        ):
+        for file_name, file_path in optional_artifact.items():
+            content = file_path.read_text()
+            Path(file_name).write_text(content)

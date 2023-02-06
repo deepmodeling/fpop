@@ -1,11 +1,27 @@
-import sys
-sys.path.append("..")
-from RunFp import RunFp
+from dflow.python import (
+    OP,
+    OPIO,
+    OPIOSign,
+    Artifact,
+    TransientError,
+    FatalError,
+    BigParameter,
+)
 from typing import (
     Tuple,
     List,
     Optional,
 )
+import numpy as np
+import dpdata, sys, subprocess
+from dargs import (
+    dargs, 
+    Argument, 
+    Variant, 
+    ArgumentEncoder,
+)
+from PrepRunFp.RunFp.RunFp import RunFp
+from dflow.utils import run_command
 
 class RunVasp(RunFp):
     def input_files(self) -> List[str]:
@@ -15,7 +31,7 @@ class RunVasp(RunFp):
         files: List[str]
             A list of madatory input files names.
         '''
-        return [vasp_conf_name, vasp_input_name, vasp_pot_name, vasp_kp_name]
+        return ["POSCAR", "INCAR", "POTCAR", "KPOINTS"]
 
     def optional_input_files(self) -> List[str]:
         r'''The optional input files to run a vasp task.
@@ -53,15 +69,12 @@ class RunVasp(RunFp):
         out_name = out
         # run vasp
         command = " ".join([command, ">", log_name])
-        ret, out, err = run_command(command, shell=True)
+        ret, out, err = run_command(command, raise_error=False, try_bash=True,)
         if ret != 0:
             raise TransientError(
                 "vasp failed\n", "out msg", out, "\n", "err msg", err, "\n"
             )
-        # convert the output to deepmd/npy format
-        sys = dpdata.LabeledSystem("OUTCAR")
-        sys.to("deepmd/npy", out_name)
-        return out_name, log_name
+        return log_name
 
     @staticmethod
     def args():
@@ -81,10 +94,10 @@ class RunVasp(RunFp):
                 "out",
                 str,
                 optional=True,
-                default=fp_default_out_data_name,
+                default="data",
                 doc=doc_vasp_out,
             ),
             Argument(
-                "log", str, optional=True, default=fp_default_log_name, doc=doc_vasp_log
+                "log", str, optional=True, default="fp.log", doc=doc_vasp_log
             ),
         ]

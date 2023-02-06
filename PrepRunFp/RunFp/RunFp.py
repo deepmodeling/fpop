@@ -1,6 +1,6 @@
 from abc import ABC,abstractmethod
+from contextlib import contextmanager
 from dflow.python import (
-    PythonOPTemplate,
     OP,
     OPIO,
     OPIOSign,
@@ -9,6 +9,17 @@ from dflow.python import (
     FatalError,
     BigParameter,
 )
+from dflow import (
+    Workflow,
+    Step,
+    upload_artifact,
+    download_artifact,
+    InputArtifact,
+    OutputArtifact,
+    ShellOPTemplate
+)
+import os, json, dpdata, shutil
+from pathlib import Path
 from typing import (
     Any,
     Tuple,
@@ -16,13 +27,39 @@ from typing import (
     Set,
     Dict,
     Optional,
+    Union,
 )
+import numpy as np
+import dargs
 from dargs import (
     dargs,
     Argument,
     Variant,
     ArgumentEncoder,
 )
+
+@contextmanager
+def set_directory(path: Path):
+    '''Sets the current working path within the context.
+    Parameters
+    ----------
+    path : Path
+        The path to the cwd
+    Yields
+    ------
+    None
+    Examples
+    --------
+    >>> with set_directory("some_path"):
+    ...    do_something()
+    '''
+    cwd = Path().absolute()
+    path.mkdir(exist_ok=True, parents=True)
+    try:
+        os.chdir(path)
+        yield
+    finally:
+        os.chdir(cwd)
 
 class RunFp(OP, ABC):
     r'''Execute a first-principles (FP) task.
@@ -40,6 +77,8 @@ class RunFp(OP, ABC):
                 "config": BigParameter(dict),
                 "task_name": str,
                 "task_path": Artifact(Path),
+                "backward_list": List[str],
+                "optional_artifact": Artifact(Dict[str,Path],optional=True),
             }
         )
 
@@ -48,7 +87,7 @@ class RunFp(OP, ABC):
         return OPIOSign(
             {
                 "log": Artifact(Path),
-                "labeled_data": Artifact(Path),
+                "backward_files": Artifact(Path),
             }
         )
 
@@ -59,16 +98,6 @@ class RunFp(OP, ABC):
         -------
         files: List[str]
             A list of madatory input files names.
-        '''
-        pass
-
-    @abstractmethod
-    def optional_input_files(self) -> List[str]:
-        r'''The optional input files to run a FP task.
-        Returns
-        -------
-        files: List[str]
-            A list of optional input files names.
         '''
         pass
 
@@ -157,6 +186,10 @@ class RunFp(OP, ABC):
         opt_input_files = self.optional_input_files()
         opt_input_files = [(Path(task_path) / ii).resolve() for ii in opt_input_files]
         work_dir = Path(task_name)
+        opt_input_files = []
+        for ss,vv in ip["optional_artifact"].items():
+            opt_input_files.append(ss)
+        opt_input_files = [(Path(task_path) / ii).resolve() for ii in opt_input_files]
 
         with set_directory(work_dir):
             # link input files
@@ -169,11 +202,19 @@ class RunFp(OP, ABC):
                 if os.path.isfile(ii):
                     iname = ii.name
                     Path(iname).symlink_to(ii)
-            out_name, log_name = self.run_task(**config)
+            log_name = self.run_task(**config)
+
+            backward_dir = Path("backward_files")
+            os.makedirs(backward_dir)
+            for ii in opt_input_files:
+                print(ii)
+                ret = ii.read_text()
+                with set_directory(backward_dir):
+                    ii.write()
 
         return OPIO(
             {
                 "log": work_dir / log_name,
-                "labeled_data": work_dir / out_name,
+                "backward_files": work_dir / backward_dir
             }
         )
