@@ -8,6 +8,7 @@ from dflow.python import (
     TransientError,
     FatalError,
     BigParameter,
+    Parameter,
 )
 from dflow import (
     Workflow,
@@ -65,20 +66,21 @@ class RunFp(OP, ABC):
     r'''Execute a first-principles (FP) task.
     A working directory named `task_name` is created. All input files
     are copied or symbol linked to directory `task_name`. The FP
-    command is exectuted from directory `task_name`. The
-    `op["labeled_data"]` in `"deepmd/npy"` format (HF5 in the future)
-    provided by `dpdata` will be created.
+    command is exectuted from directory `task_name`. 
     '''
 
     @classmethod
     def get_input_sign(cls):
         return OPIOSign(
             {
-                "config": BigParameter(dict),
                 "task_name": str,
                 "task_path": Artifact(Path),
                 "backward_list": List[str],
+                "log_name": Parameter(str,default='log'),
+                "backward_dir_name": Parameter(str,default='backward_dir'),
+                "config": BigParameter(dict,default={}),
                 "optional_artifact": Artifact(Dict[str,Path],optional=True),
+                "optional_input": BigParameter(dict,default={})
             }
         )
 
@@ -86,8 +88,7 @@ class RunFp(OP, ABC):
     def get_output_sign(cls):
         return OPIOSign(
             {
-                "log": Artifact(Path),
-                "backward_files": Artifact(Path),
+                "backward_dir": Artifact(Path),
             }
         )
 
@@ -104,20 +105,31 @@ class RunFp(OP, ABC):
     @abstractmethod
     def run_task(
         self,
-        **kwargs,
-    ) -> Tuple[str, str]:
+        backward_dir_name,
+        log_name,
+        backward_list: List[str],
+        run_config: Optional[Dict]=None,
+        optional_input: Optional[Dict]=None,
+    ) -> str:
         r'''Defines how one FP task runs
         Parameters
         ----------
-        kwargs
+        backward_dir_name:
+            The name of the directory which contains the backward files.
+        log_name:
+            The name of log file.
+        backward_list:
+            The output files the users need.
+        run_config:
             Keyword args defined by the developer.
             The fp/run_config session of the input file will be passed to this function.
+        optional_input:
+            The parameters developers need in runtime.
+        
         Returns
         -------
-        out_name: str
-            The file name of the output data. Should be in dpdata.LabeledSystem format.
-        log_name: str
-            The file name of the log.
+        backward_dir_name: str
+            The directory name which containers the files users need.
         '''
         pass
 
@@ -162,14 +174,18 @@ class RunFp(OP, ABC):
         ----------
         ip : dict
             Input dict with components:
-            - `config`: (`dict`) The config of FP task. Should have `config['run']`, which defines the runtime configuration of the FP task.
             - `task_name`: (`str`) The name of task.
             - `task_path`: (`Artifact(Path)`) The path that contains all input files prepareed by `PrepFp`.
+            - `backward_list`: (`List[str]`) The output files the users need.
+            - `log_name`: (`str`) The name of log file.
+            - `backward_dir_name`: (`str`) The name of the directory which contains the backward files.
+            - `config`: (`dict`) The config of FP task. May have `config['run']`, which defines the runtime configuration of the FP task.
+            - `optional_artifact` : (`Artifact(Dict[str,Path])`) Other files that users or developers need.
+            - `optional_input` : (`dict`) Other parameters the developers or users may need.
         Returns
         -------
             Output dict with components:
-            - `log`: (`Artifact(Path)`) The log file of FP.
-            - `labeled_data`: (`Artifact(Path)`) The path to the labeled data in `"deepmd/npy"` format provided by `dpdata`.
+            - `backward_dir`: (`Artifact(Path)`) The directory which contains the files users need.
         Exceptions
         ----------
         TransientError
@@ -177,14 +193,16 @@ class RunFp(OP, ABC):
         FatalError
             When mandatory files are not found.
         '''
-        config = ip["config"]["run"] if ip["config"]["run"] is not None else {}
-        config = type(self).normalize_config(config, strict=False)
+        backward_dir_name = ip["backward_dir_name"] 
+        log_name = ip["log_name"] 
+        backward_list = ip["backward_list"]
+        run_config = ip["config"]["run"] if ip["config"]["run"] is not None else {}
+        run_config = type(self).normalize_config(run_config, strict=False)
+        optional_input = ip["optional_input"]
         task_name = ip["task_name"]
         task_path = ip["task_path"]
         input_files = self.input_files()
         input_files = [(Path(task_path) / ii).resolve() for ii in input_files]
-        opt_input_files = self.optional_input_files()
-        opt_input_files = [(Path(task_path) / ii).resolve() for ii in opt_input_files]
         work_dir = Path(task_name)
         opt_input_files = []
         for ss,vv in ip["optional_artifact"].items():
@@ -202,19 +220,10 @@ class RunFp(OP, ABC):
                 if os.path.isfile(ii):
                     iname = ii.name
                     Path(iname).symlink_to(ii)
-            log_name = self.run_task(**config)
-
-            backward_dir = Path("backward_files")
-            os.makedirs(backward_dir)
-            for ii in opt_input_files:
-                print(ii)
-                ret = ii.read_text()
-                with set_directory(backward_dir):
-                    ii.write()
+            backward_dir_name = self.run_task(backward_dir_name,log_name,backward_list,run_config,optional_input)
 
         return OPIO(
             {
-                "log": work_dir / log_name,
-                "backward_files": work_dir / backward_dir
+                "backward_dir": work_dir / backward_dir_name
             }
         )

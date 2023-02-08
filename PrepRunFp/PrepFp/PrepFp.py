@@ -63,7 +63,8 @@ class PrepFp(OP, ABC):
             "inputs" : BigParameter(object),
             "type_map": List[str],
             "confs" : Artifact(List[Path]),
-            "optional_input" : BigParameter(dict),
+            "config" : BigParameter(dict,default={}),
+            "optional_input" : BigParameter(dict,default={}),
             "optional_artifact" : Artifact(Dict[str,Path],optional=True)
         })
 
@@ -79,6 +80,9 @@ class PrepFp(OP, ABC):
             self,
             conf_frame: dpdata.System,
             inputs: Any,
+            prepare_config: Optional[Dict] = None,
+            optional_input: Optional[Dict] = None,
+            optional_artifact: Optional[Dict] = None,
     ):
         r"""Define how one FP task is prepared.
 
@@ -89,6 +93,12 @@ class PrepFp(OP, ABC):
         inputs: Any
             The class object handels all other input files of the task. 
             For example, pseudopotential file, k-point file and so on.
+        prepare_config: Dict
+            Definition of runtime parameters in the process of preparing tasks. 
+        optional_input: 
+            Other parameters the developers or users may need.
+        optional_artifact
+            Other files that users or developers need.
         """
         pass
 
@@ -104,9 +114,13 @@ class PrepFp(OP, ABC):
         ip : dict
             Input dict with components:
 
-            - `config` : (`dict`) Should have `config['inputs']`, which defines the input files of the FP task.
-            - `confs` : (`Artifact(List[Path])`) Configurations for the FP tasks. Stored in folders as deepmd/npy format. Can be parsed as dpdata.MultiSystems. 
-            - `type_map` : List[str]
+            - `config` : (`dict`) May have `config['prepare']`, which defines the parameters of the process of preparing FP tasks.
+            - `inputs` : (`object`) The class object handels all other input files of the task. For example, pseudopotential file, k-point file and so on.
+            - `type_map` : (`List[str]`) The list of elements.
+            - `confs` : (`Artifact(List[Path])`) Configurations for the FP tasks. Stored in folders as formats which can be read by dpdata.System. 
+                The format can be defined by parameter "conf_format" in "optional_input". The default format is deepmd/npy. 
+            - `optional_input` : (`dict`) Other parameters the developers or users may need.
+            - `optional_artifact` : (` Artifact(Dict[str,Path])`) Other files that users or developers need.
 
         Returns
         -------
@@ -117,12 +131,17 @@ class PrepFp(OP, ABC):
             - `task_paths`: (`Artifact(List[Path])`) The parepared working paths of the tasks. Contains all input files needed to start the FP. The order fo the Paths should be consistent with `op["task_names"]`
         """
 
+        try:
+            prepare_config = ip['config']['prepare']
+        except:
+            prepare_config = None
         inputs = ip['inputs']
         confs = ip['confs']
         type_map = ip['type_map']
         optional_artifact = ip["optional_artifact"]
+        optional_input = ip["optional_input"]
         try:
-            conf_format = ip["optional_input"]["conf_format"]
+            conf_format = optional_input["conf_format"]
         except:
             conf_format = "deepmd/npy"
 
@@ -135,7 +154,7 @@ class PrepFp(OP, ABC):
         for system in confs:
             ss = dpdata.System(system, fmt=conf_format, labeled=False)
             for ff in range(ss.get_nframes()):
-                nn, pp = self._exec_one_frame(counter, inputs, ss[ff], optional_artifact)
+                nn, pp = self._exec_one_frame(counter, inputs, ss[ff], prepare_config, optional_input, optional_artifact)
                 task_names.append(nn)
                 task_paths.append(pp)
                 counter += 1
@@ -151,19 +170,12 @@ class PrepFp(OP, ABC):
             idx,
             inputs,
             conf_frame : dpdata.System,
-            optional_files=[],
+            prepare_config = None,
+            optional_input = None,
+            optional_artifact = None,
     ) -> Tuple[str, Path]:
         task_name = 'task.' + '%06d' % idx
         task_path = Path(task_name)
         with set_directory(task_path):
-            self.prep_task(conf_frame, inputs)
-            self.prep_optional_files(optional_files)
+            self.prep_task(conf_frame, inputs, prepare_config, optional_input, optional_artifact)
         return task_name, task_path
-
-    def prep_optional_files(
-        self,
-        optional_artifact : Dict
-        ):
-        for file_name, file_path in optional_artifact.items():
-            content = file_path.read_text()
-            Path(file_name).write_text(content)

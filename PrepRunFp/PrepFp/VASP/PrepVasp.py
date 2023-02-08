@@ -2,12 +2,16 @@ from PrepRunFp.PrepFp.PrepFp import PrepFp
 from PrepRunFp.PrepFp.VASP.VaspInputs import VaspInputs
 import dpdata
 from pathlib import Path
+from typing import Optional,Dict
 
 class PrepVasp(PrepFp):
     def prep_task(
             self,
             conf_frame: dpdata.System,
             vasp_inputs: VaspInputs,
+            prepare_config: Optional[Dict] = None,
+            optional_input: Optional[Dict] = None,
+            optional_artifact: Optional[Dict] = None,
     ):
         r"""Define how one Vasp task is prepared.
 
@@ -17,6 +21,12 @@ class PrepVasp(PrepFp):
             One frame of configuration in the dpdata format.
         inputs: VaspInputs
             The VaspInputs object handels all other input files of the task.
+        prepare_config: Dict
+            Definition of runtime parameters in the process of preparing tasks. 
+        optional_input: 
+            Other parameters the developers or users may need.
+        optional_artifact
+            Other files that users or developers need.
         """
 
         conf_frame.to('vasp/poscar', 'POSCAR')
@@ -31,3 +41,8 @@ class PrepVasp(PrepFp):
         Path('KPOINTS').write_text(
             vasp_inputs.make_kpoints(conf_frame['cells'][0])
         )
+
+        if optional_artifact:
+            for file_name, file_path in optional_artifact.items():
+                content = file_path.read_text()
+                Path(file_name).write_text(content)
