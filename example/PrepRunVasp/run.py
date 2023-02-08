@@ -83,7 +83,8 @@ steps = PrepRunFp(
 )
 
 confs = ["data.000","data.001"]
-vasp_inputs = VaspInputs(5.0,'test_incar',{'Na':'test_potcar'},True)
+
+vasp_inputs = VaspInputs(5.0,'test_incar',{'Na':'test_potcar'},True) # kspacing  incar  potcar kgamma
 prep_run_step = Step(
     'prep-run-step', 
     template = steps,
