@@ -1,2 +1,2 @@
 # FP_OPs
-This repository is dedicated to writing reusable OPs(operators) related to first principles computing.
+This repository is dedicated to writing reusable OPs(operators) related to first principles computations.
