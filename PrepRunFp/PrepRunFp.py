@@ -27,11 +27,6 @@ from dargs import (
     Variant,
 )
 
-try:
-    sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__),"../../")))
-    import PrepRunFp
-except:
-    pass
 from dflow.plugins.dispatcher import DispatcherExecutor
 from dflow.plugins.lebesgue import LebesgueExecutor
 import os,sys

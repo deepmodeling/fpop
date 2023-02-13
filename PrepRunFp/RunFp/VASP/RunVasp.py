@@ -63,8 +63,10 @@ class RunVasp(RunFp):
         backward_dir_name: str
             The directory name which containers the files users need.
         '''
-
-        command = run_config["command"] 
+        if run_config:
+            command = run_config["command"]
+        else:
+            command = "vasp_std"
         # run vasp
         command = " ".join([command, ">", log_name])
         ret, out, err = run_command(command, raise_error=False, try_bash=True,)

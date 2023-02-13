@@ -9,6 +9,7 @@ from typing import (
 )
 import numpy as np
 from pathlib import Path
+from dargs import Argument
 
 class VaspInputs():
     def __init__(
