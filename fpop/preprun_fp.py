@@ -128,17 +128,17 @@ class PrepRunFp(Steps):
         upload_python_packages : Optional[List[os.PathLike]] = None,
     ):
         self._input_parameters = {
-            "config" : InputParameter(),
             "inputs" : InputParameter(),
-            "optional_input" : InputParameter(),
             "type_map" : InputParameter(),
             "backward_list" : InputParameter(),
+            "config" : InputParameter(type=dict , value={}),
+            "optional_input" : InputParameter(type=dict , value={}),
             "log_name" : InputParameter(type=str , value="log"),
             "backward_dir_name" : InputParameter(type=str , value="backward_dir"),
         }
         self._input_artifacts = {
             "confs" : InputArtifact(),
-            "optional_artifact" : InputArtifact(), 
+            "optional_artifact" : InputArtifact(optional=True), 
         }
         self._output_artifacts = {
             "backward_dirs" : OutputArtifact(),
