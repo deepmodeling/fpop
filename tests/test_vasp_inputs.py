@@ -42,7 +42,7 @@ class TestVASPInputs(unittest.TestCase):
         atom_names = ['O', 'H']
         self.assertEqual(vi.make_potcar(atom_names), 'bar O\nbar H\n')
 
-    def test_vasp_input_kp(self):
+    def test_vasp_input_kp_kgamma_true(self):
         ref = textwrap.dedent(
 """Automatic mesh
 0
@@ -73,7 +73,7 @@ Cartesian
         self.assertEqual(ref, kps)
 
         
-    def test_vasp_input_kp(self):
+    def test_vasp_input_kp_kgamma_false(self):
         ref = textwrap.dedent(
 """K-Points
 0
