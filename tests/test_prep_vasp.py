@@ -70,10 +70,10 @@ class TestPrepVaspDpConf(unittest.TestCase):
     def setUp(self):
         self.ntasks = 3
         self.confs = [Path(Path('confs')/'data.000'),Path(Path('confs')/'data.001')]
-        self.incar = Path('incar')
-        self.incar.write_text('here incar')
-        self.potcar = Path('potcar')
-        self.potcar.write_text('here potcar')
+        self.incar = 'incar'
+        Path(self.incar).write_text('here incar')
+        self.potcar = 'potcar'
+        Path(self.potcar).write_text('here potcar')
         self.type_map = ['Na']
     
     def tearDown(self):
