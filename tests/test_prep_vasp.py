@@ -101,6 +101,9 @@ class TestPrepVaspDpConf(unittest.TestCase):
         for ii in [self.incar,self.potcar]:
             if Path(ii).is_file:
                 os.remove(ii)
+        for ii in self.confs:
+            if ii.is_dir():
+                shutil.rmtree(ii)
 
     def test(self):
         op = PrepVasp()
