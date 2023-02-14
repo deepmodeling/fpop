@@ -137,9 +137,9 @@ class TestPrepRunVasp(unittest.TestCase):
         self.ntasks = 3
         self.confs = [Path(Path('confs')/'data.000'),Path(Path('confs')/'data.001')]
         self.incar = 'incar'
-        self.incar.write_text("This is INCAR")
+        Path(self.incar).write_text("This is INCAR")
         self.potcar = 'potcar'
-        self.potcar.write_text('This is POTCAR')
+        Path(self.potcar).write_text('This is POTCAR')
         self.type_map = ['Na']
         self.optional_testfile = Path('test_file')
         self.optional_testfile.write_text('This is an optional artifact')
