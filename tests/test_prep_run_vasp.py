@@ -44,7 +44,7 @@ from dflow.python import (
     upload_packages,
 )
 
-import time, shutil, json, jsonpickle
+import time, shutil, json, jsonpickle, dpdata
 from pathlib import Path
     
 from context import (
@@ -58,6 +58,7 @@ from fpop.vasp import PrepVasp, VaspInputs
 
 from mocked_ops import MockedRunVasp
 from fpop.preprun_fp import PrepRunFp
+from constants import POSCAR_1_content,POSCAR_2_content
 upload_packages.append("../fpop")
 upload_packages.append("./context.py")
 
@@ -73,6 +74,23 @@ default_config = {
             },  
         },
     }
+
+def dump_conf_from_poscar(type, conf_list):
+    for ii in range(len(conf_list)):
+        Path("POSCAR_%d"%ii).write_text(conf_list[ii])
+    if type == "deepmd/npy":
+        confs = []
+        for ii in range(len(conf_list)):
+            ls = dpdata.System("POSCAR_%d"%ii, fmt="vasp/poscar")
+            ls.to_deepmd_npy("data.%03d"%ii)
+            confs.append(Path("data.%03d"%ii))
+            os.remove("POSCAR_%d"%ii)
+        return confs
+    elif type == "vasp/poscar":
+        confs = []
+        for ii in range(len(conf_list)):
+            confs.append(Path("POSCAR_%d"%ii))
+        return confs
 
 class TestMockedRunVasp(unittest.TestCase):
     def setUp(self):
@@ -131,9 +149,8 @@ class TestMockedRunVasp(unittest.TestCase):
 @unittest.skipIf(skip_ut_with_dflow, skip_ut_with_dflow_reason)
 class TestPrepRunVasp(unittest.TestCase):
     def setUp(self):
-        warnings.simplefilter('ignore', ResourceWarning)
-        self.ntasks = 3
-        self.confs = [Path(Path('confs')/'data.000'),Path(Path('confs')/'data.001')]
+        self.ntasks = 2
+        self.confs = dump_conf_from_poscar("vasp/poscar",[POSCAR_1_content, POSCAR_2_content])
         self.incar = 'incar'
         Path(self.incar).write_text("This is INCAR")
         self.potcar = 'potcar'
@@ -161,6 +178,9 @@ class TestPrepRunVasp(unittest.TestCase):
         for ii in [self.incar, self.potcar, self.optional_testfile]:
             if ii.is_file():
                 os.remove(ii)
+        for ii in self.confs:
+            if ii.is_file():
+                os.remove(ii)
 
     def test(self):
         steps = PrepRunFp(
@@ -183,7 +203,7 @@ class TestPrepRunVasp(unittest.TestCase):
                 'type_map' : self.type_map,
                 'config' : default_config,
                 'inputs' : vasp_inputs,
-                'optional_input' : {},
+                'optional_input' : {"conf_format" : "vasp/poscar"},
                 'backward_list' : ['POSCAR','POTCAR','TEST'],
                 'backward_dir_name' : 'my_backward',
                 'log_name' : 'my_log',

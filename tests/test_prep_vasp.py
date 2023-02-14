@@ -26,7 +26,7 @@ from dflow.python import (
     upload_packages,
 )
 
-import time, shutil
+import time, shutil, dpdata
 from pathlib import Path
 
 from context import (
@@ -37,6 +37,7 @@ from context import (
         skip_ut_with_dflow_reason,
         )
 from fpop.vasp import PrepVasp,VaspInputs
+from constants import POSCAR_1_content,POSCAR_2_content
 upload_packages.append("../fpop")
 upload_packages.append("./context.py")
 
@@ -61,14 +62,31 @@ def check_vasp_tasks(tcase, ntasks):
         cc += 1
     return tdirs
 
+def dump_conf_from_poscar(type, conf_list):
+    for ii in range(len(conf_list)):
+        Path("POSCAR_%d"%ii).write_text(conf_list[ii])
+    if type == "deepmd/npy":
+        confs = []
+        for ii in range(len(conf_list)):
+            ls = dpdata.System("POSCAR_%d"%ii, fmt="vasp/poscar")
+            ls.to_deepmd_npy("data.%03d"%ii)
+            confs.append(Path("data.%03d"%ii))
+            os.remove("POSCAR_%d"%ii)
+        return confs
+    elif type == "vasp/poscar":
+        confs = []
+        for ii in range(len(conf_list)):
+            confs.append(Path("POSCAR_%d"%ii))
+        return confs
+
 class TestPrepVaspDpConf(unittest.TestCase):
     '''
     deepmd/npy format named ["data.000","data.001"].
     no optional_input or optional_artifact.
     '''
     def setUp(self):
-        self.ntasks = 3
-        self.confs = [Path(Path('confs')/'data.000'),Path(Path('confs')/'data.001')]
+        self.ntasks = 2
+        self.confs = dump_conf_from_poscar("deepmd/npy",[POSCAR_1_content, POSCAR_2_content])
         self.incar = 'incar'
         Path(self.incar).write_text('here incar')
         self.potcar = 'potcar'
@@ -114,8 +132,8 @@ class TestPrepRunVaspPoscarConf(unittest.TestCase):
     Add optional_input["conf_format"] and optional_artifact. 
     '''
     def setUp(self):
-        self.ntasks = 3
-        self.confs = [Path('confs')/'POSCAR_0', Path('confs')/'POSCAR_1', Path('confs')/'POSCAR_2']
+        self.ntasks = 2
+        self.confs = dump_conf_from_poscar("deepmd/npy",[POSCAR_1_content, POSCAR_2_content])
         self.incar = 'incar'
         Path(self.incar).write_text('here incar')
         self.potcar = 'potcar'
@@ -130,6 +148,9 @@ class TestPrepRunVaspPoscarConf(unittest.TestCase):
             if work_path.is_dir():
                 shutil.rmtree(work_path)
         for ii in [self.incar,self.potcar,self.optional_file]:
+            if ii.is_file:
+                os.remove(ii)
+        for ii in self.confs:
             if ii.is_file:
                 os.remove(ii)
 
