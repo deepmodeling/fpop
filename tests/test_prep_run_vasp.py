@@ -76,7 +76,6 @@ default_config = {
 
 class TestMockedRunVasp(unittest.TestCase):
     def setUp(self):
-        warnings.simplefilter('ignore', ResourceWarning)
         self.ntask = 6
         self.task_list = []
         for ii in range(self.ntask):
