@@ -12,8 +12,8 @@ upload_packages.append(__file__)
 import os, json, shutil, re, pickle, glob
 from pathlib import Path
 from typing import Tuple, List
-from context import PrepRunFp
-from PrepRunFp.RunFp.VASP.RunVasp import RunVasp
+from context import fpop
+from fpop.vasp import RunVasp
 
 class MockedRunVasp(RunVasp):
     @OP.exec_sign_check

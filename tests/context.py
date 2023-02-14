@@ -1,8 +1,8 @@
 import sys,os
-PrepRunFp_path = os.path.abspath(os.path.join(os.path.dirname(__file__),".."))
-sys.path.insert(0,PrepRunFp_path)
-import PrepRunFp
-upload_python_packages = [os.path.join(PrepRunFp_path, 'PrepRunFp')]
+fpop_path = os.path.abspath(os.path.join(os.path.dirname(__file__),".."))
+sys.path.insert(0,fpop_path)
+import fpop
+upload_python_packages = [os.path.join(fpop_path, 'fpop')]
 if os.getenv('SKIP_UT_WITH_DFLOW'):
     if(os.getenv('SKIP_UT_WITH_DFLOW')!=0):
         skip_ut_with_dflow=1

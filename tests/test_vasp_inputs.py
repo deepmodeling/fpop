@@ -1,9 +1,9 @@
-from context import PrepRunFp
+from context import fpop
 import os,sys,json,glob,shutil,textwrap
 import dpdata
 import numpy as np
 import unittest
-from PrepRunFp.PrepFp.VASP.VaspInputs import make_kspacing_kpoints, VaspInputs
+from fpop.vasp import make_kspacing_kpoints, VaspInputs
 from pathlib import Path
 
 class TestVASPInputs(unittest.TestCase):

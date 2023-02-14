@@ -3,8 +3,8 @@ from dflow.python import OPIO,TransientError
 import shutil
 from pathlib import Path
 from mock import mock, patch, call
-from context import PrepRunFp
-from PrepRunFp.RunFp.VASP.RunVasp import RunVasp
+from context import fpop
+from fpop.vasp import RunVasp
 from mocked_ops import MockedRunVasp
 
 class TestRunVasp(unittest.TestCase):
@@ -27,7 +27,7 @@ class TestRunVasp(unittest.TestCase):
         if Path(self.task_name).is_dir():
             shutil.rmtree(self.task_name)
     
-    @patch('PrepRunFp.RunFp.VASP.RunVasp.run_command')
+    @patch('fpop.vasp.run_command')
     def test_success(self, mocked_run):
         mocked_run.side_effect = [ (0, 'out\n', '') ]
         op = RunVasp()
@@ -65,7 +65,7 @@ class TestRunVasp(unittest.TestCase):
         self.assertEqual((work_dir/'TEST1').read_text(), 'here test1')
         self.assertEqual((work_dir/'TEST2').read_text(), 'here test2')
 
-    @patch('PrepRunFp.RunFp.VASP.RunVasp.run_command')
+    @patch('fpop.vasp.run_command')
     def test_error(self, mocked_run):
         mocked_run.side_effect = [ (1, 'out\n', '') ]
         op = RunVasp()
