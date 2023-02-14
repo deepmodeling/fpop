@@ -82,7 +82,7 @@ class TestPrepVaspDpConf(unittest.TestCase):
             if work_path.is_dir():
                 shutil.rmtree(work_path)
         for ii in [self.incar,self.potcar]:
-            if ii.is_file:
+            if Path(ii).is_file:
                 os.remove(ii)
 
     def test(self):
@@ -117,10 +117,10 @@ class TestPrepRunVaspPoscarConf(unittest.TestCase):
     def setUp(self):
         self.ntasks = 3
         self.confs = [Path('confs')/'POSCAR_0', Path('confs')/'POSCAR_1', Path('confs')/'POSCAR_2']
-        self.incar = Path('incar')
-        self.incar.write_text('here incar')
-        self.potcar = Path('potcar')
-        self.potcar.write_text('here potcar')
+        self.incar = 'incar'
+        Path(self.incar).write_text('here incar')
+        self.potcar = 'potcar'
+        Path(self.potcar).write_text('here potcar')
         self.type_map = ['Na']
         self.optional_file = Path('optional_test')
         self.optional_file.write_text('here test')
