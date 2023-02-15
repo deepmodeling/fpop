@@ -79,7 +79,7 @@ default_config = {
 def dump_conf_from_poscar(
         type, 
         conf_list
-        ) -> List :
+        ) -> List[str] :
     for ii in range(len(conf_list)):
         Path("POSCAR_%d"%ii).write_text(conf_list[ii])
     if type == "deepmd/npy":
@@ -87,13 +87,13 @@ def dump_conf_from_poscar(
         for ii in range(len(conf_list)):
             ls = dpdata.System("POSCAR_%d"%ii, fmt="vasp/poscar")
             ls.to_deepmd_npy("data.%03d"%ii)
-            confs.append(Path("data.%03d"%ii))
+            confs.append("data.%03d")
             os.remove("POSCAR_%d"%ii)
         return confs
     elif type == "vasp/poscar":
         confs = []
         for ii in range(len(conf_list)):
-            confs.append(Path("POSCAR_%d"%ii))
+            confs.append("POSCAR_%d")
         return confs
     else:
         return []
