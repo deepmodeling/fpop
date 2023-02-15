@@ -37,6 +37,7 @@ from context import (
         skip_ut_with_dflow_reason,
         )
 from fpop.vasp import PrepVasp,VaspInputs
+from typing import List
 from constants import POSCAR_1_content,POSCAR_2_content
 upload_packages.append("../fpop")
 upload_packages.append("./context.py")
@@ -62,7 +63,10 @@ def check_vasp_tasks(tcase, ntasks):
         cc += 1
     return tdirs
 
-def dump_conf_from_poscar(type, conf_list):
+def dump_conf_from_poscar(
+        type, 
+        conf_list
+        ) -> List :
     for ii in range(len(conf_list)):
         Path("POSCAR_%d"%ii).write_text(conf_list[ii])
     if type == "deepmd/npy":

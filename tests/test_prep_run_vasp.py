@@ -46,6 +46,7 @@ from dflow.python import (
 
 import time, shutil, json, jsonpickle, dpdata
 from pathlib import Path
+from typing import List
     
 from context import (
         fpop,
@@ -75,7 +76,10 @@ default_config = {
         },
     }
 
-def dump_conf_from_poscar(type, conf_list):
+def dump_conf_from_poscar(
+        type, 
+        conf_list
+        ) -> List :
     for ii in range(len(conf_list)):
         Path("POSCAR_%d"%ii).write_text(conf_list[ii])
     if type == "deepmd/npy":
