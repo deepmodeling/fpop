@@ -156,8 +156,8 @@ class TestMockedRunVasp(unittest.TestCase):
 class TestPrepRunVasp(unittest.TestCase):
     def setUp(self):
         self.ntasks = 2
-        self.confs = dump_conf_from_poscar("vasp/poscar",[POSCAR_1_content, POSCAR_2_content])
-        self.confs = [Path(ii) for ii in self.confs]
+        confs = dump_conf_from_poscar("vasp/poscar",[POSCAR_1_content, POSCAR_2_content])
+        self.confs = [Path(ii) for ii in confs]
         self.incar = 'incar'
         Path(self.incar).write_text("This is INCAR")
         self.potcar = 'potcar'

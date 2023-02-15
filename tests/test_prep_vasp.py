@@ -92,8 +92,8 @@ class TestPrepVaspDpConf(unittest.TestCase):
     '''
     def setUp(self):
         self.ntasks = 2
-        self.confs = dump_conf_from_poscar("deepmd/npy",[POSCAR_1_content, POSCAR_2_content])
-        self.confs = [Path(ii) for ii in self.confs]
+        confs = dump_conf_from_poscar("deepmd/npy",[POSCAR_1_content, POSCAR_2_content])
+        self.confs = [Path(ii) for ii in confs]
         self.incar = 'incar'
         Path(self.incar).write_text('here incar')
         self.potcar = 'potcar'
@@ -144,8 +144,8 @@ class TestPrepRunVaspPoscarConf(unittest.TestCase):
     '''
     def setUp(self):
         self.ntasks = 2
-        self.confs = dump_conf_from_poscar("deepmd/npy",[POSCAR_1_content, POSCAR_2_content])
-        self.confs = [Path(ii) for ii in self.confs]
+        confs = dump_conf_from_poscar("deepmd/npy",[POSCAR_1_content, POSCAR_2_content])
+        self.confs = [Path(ii) for ii in confs]
         self.incar = 'incar'
         Path(self.incar).write_text('here incar')
         self.potcar = 'potcar'
