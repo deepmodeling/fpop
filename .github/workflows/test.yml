@@ -22,5 +22,5 @@ jobs:
         pip install -e .[test]
         pip install mock coverage pytest
     - name: Test
-      run: cd tests && SKIP_UT_WITH_DFLOW=0 DFLOW_DEBUG=1 coverage run -m unittest -v -f && coverage report
+      run: cd tests && export SKIP_UT_WITH_DFLOW=0 && export DFLOW_DEBUG=1 && coverage run -m unittest -v -f && coverage report
     - uses: codecov/codecov-action@v3
