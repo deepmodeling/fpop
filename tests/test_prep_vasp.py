@@ -74,7 +74,7 @@ def dump_conf_from_poscar(
         for ii in range(len(conf_list)):
             ls = dpdata.System("POSCAR_%d"%ii, fmt="vasp/poscar")
             ls.to_deepmd_npy("data.%03d"%ii)
-            confs.append("data.%03d")
+            confs.append("data.%03d"%ii)
             os.remove("POSCAR_%d"%ii)
         return confs
     elif type == "vasp/poscar":
