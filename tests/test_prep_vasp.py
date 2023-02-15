@@ -108,10 +108,9 @@ class TestPrepVaspDpConf(unittest.TestCase):
         for ii in [self.incar,self.potcar]:
             if Path(ii).is_file:
                 os.remove(ii)
-        if not self.confs:
-            for ii in self.confs:
-                if ii.is_dir():
-                    shutil.rmtree(ii)
+        for ii in self.confs:
+            if ii.is_dir():
+                shutil.rmtree(ii)
 
     def test(self):
         op = PrepVasp()
@@ -135,7 +134,28 @@ class TestPrepVaspDpConf(unittest.TestCase):
         tdirs = check_vasp_tasks(self, self.ntasks)
         self.assertEqual(tdirs, out['task_names'])
         self.assertEqual(tdirs, [str(ii) for ii in out['task_paths']])
-
+    ''' 
+    def testWithoutOptionalParameter(self):
+        op = PrepVasp()
+        vasp_inputs = VaspInputs(
+            0.3,
+            self.incar,
+            {'Na':self.potcar},
+            True,
+        )
+        out = op.execute(
+            OPIO(
+                {
+                    "confs" : self.confs,
+                    "inputs" : vasp_inputs,
+                    "type_map" : self.type_map,
+                }
+            )
+        )
+        tdirs = check_vasp_tasks(self, self.ntasks)
+        self.assertEqual(tdirs, out['task_names'])
+        self.assertEqual(tdirs, [str(ii) for ii in out['task_paths']])
+    '''
 @unittest.skipIf(skip_ut_with_dflow, skip_ut_with_dflow_reason)
 class TestPrepRunVaspPoscarConf(unittest.TestCase):
     '''
