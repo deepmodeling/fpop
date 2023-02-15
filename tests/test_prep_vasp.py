@@ -134,7 +134,7 @@ class TestPrepVaspDpConf(unittest.TestCase):
         tdirs = check_vasp_tasks(self, self.ntasks)
         self.assertEqual(tdirs, out['task_names'])
         self.assertEqual(tdirs, [str(ii) for ii in out['task_paths']])
-    ''' 
+     
     def testWithoutOptionalParameter(self):
         op = PrepVasp()
         vasp_inputs = VaspInputs(
@@ -155,7 +155,7 @@ class TestPrepVaspDpConf(unittest.TestCase):
         tdirs = check_vasp_tasks(self, self.ntasks)
         self.assertEqual(tdirs, out['task_names'])
         self.assertEqual(tdirs, [str(ii) for ii in out['task_paths']])
-    '''
+    
 @unittest.skipIf(skip_ut_with_dflow, skip_ut_with_dflow_reason)
 class TestPrepRunVaspPoscarConf(unittest.TestCase):
     '''
@@ -219,3 +219,35 @@ class TestPrepRunVaspPoscarConf(unittest.TestCase):
         #check optional_artifact
         for ii in step.outputs.parameters['task_names'].value:
             self.assertEqual(Path(Path(ii)/'TEST').read_text(), "here test")
+
+    def testWithoutOptionalParameter(self):
+        wf = Workflow(name = "test")
+        vi = VaspInputs(0.3,self.incar,{'Na':self.potcar},True)
+        vasp = Step(
+            name="PrepVasp",
+            template=PythonOPTemplate(PrepVasp,image=default_image),
+            artifacts={
+                "confs":upload_artifact(self.confs),
+                "optional_artifact":upload_artifact({"TEST":Path("optional_test")}),
+            },
+            parameters={
+                "inputs" : vi ,
+                "type_map" : self.type_map,
+            }
+        ) 
+        wf.add(vasp)
+        wf.submit()
+
+        while wf.query_status() in ["Pending","Running"]:
+            time.sleep(4)
+        assert(wf.query_status() == 'Succeeded')
+        step = wf.query_step(name="PrepVasp")[0]
+        download_artifact(step.outputs.artifacts["task_paths"])
+
+        tdirs = check_vasp_tasks(self, self.ntasks)
+        self.assertEqual(tdirs, step.outputs.parameters['task_names'].value)
+        
+        #check optional_artifact
+        for ii in step.outputs.parameters['task_names'].value:
+            self.assertEqual(Path(Path(ii)/'TEST').read_text(), "here test")
+

@@ -152,6 +152,22 @@ class TestMockedRunVasp(unittest.TestCase):
             self.assertTrue(Path(out['backward_dir'] / 'my_log').is_file())
             self.check_run_vasp_output(self.task_list_str[ii])
 
+    def testWithoutOptionalParameter(self):
+        self.task_list_str = [str(ii) for ii in self.task_list]
+        for ii in range(self.ntask):
+            ip = OPIO({
+                'task_name' : self.task_list_str[ii],
+                'task_path' : self.task_list[ii],
+                'log_name' : "my_log",
+                'backward_dir_name' : "my_backward",
+                "backward_list" : ['POSCAR','POTCAR'],
+            })
+            op = MockedRunVasp()
+            out = op.execute(ip)
+            self.assertEqual(out['backward_dir'] , Path(Path('task.%06d'%ii)/'my_backward'))
+            self.assertTrue(Path(out['backward_dir'] / 'my_log').is_file())
+            self.check_run_vasp_output(self.task_list_str[ii])
+
 @unittest.skipIf(skip_ut_with_dflow, skip_ut_with_dflow_reason)
 class TestPrepRunVasp(unittest.TestCase):
     def setUp(self):
