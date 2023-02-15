@@ -32,7 +32,7 @@ class TestRunVasp(unittest.TestCase):
         mocked_run.side_effect = [ (0, 'out\n', '') ]
         op = RunVasp()
         def new_check_run_success(obj):
-            pass
+            return True
         with mock.patch.object(fpop.vasp.RunVasp, "check_run_success", new=new_check_run_success):
             out = op.execute(
                 OPIO({
@@ -73,7 +73,7 @@ class TestRunVasp(unittest.TestCase):
         mocked_run.side_effect = [ (0, 'out\n', '') ]
         op = RunVasp()
         def new_check_run_success(obj):
-            pass
+            return True
         with mock.patch.object(fpop.vasp.RunVasp, "check_run_success", new=new_check_run_success):
             out = op.execute(
                 OPIO({
