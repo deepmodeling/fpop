@@ -180,7 +180,7 @@ class TestPrepRunVaspPoscarConf(unittest.TestCase):
             if work_path.is_dir():
                 shutil.rmtree(work_path)
         for ii in [self.incar,self.potcar,self.optional_file]:
-            if ii.is_file:
+            if Path(ii).is_file:
                 os.remove(ii)
         if not self.confs:
             for ii in self.confs:
@@ -200,7 +200,7 @@ class TestPrepRunVaspPoscarConf(unittest.TestCase):
             parameters={
                 "config" : {},
                 "inputs" : vi ,
-                "optional_input" : {"conf_format":"vasp/poscar"},
+                "optional_input" : {},
                 "type_map" : self.type_map,
             }
         ) 

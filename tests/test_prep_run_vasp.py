@@ -93,7 +93,7 @@ def dump_conf_from_poscar(
     elif type == "vasp/poscar":
         confs = []
         for ii in range(len(conf_list)):
-            confs.append("POSCAR_%d")
+            confs.append("POSCAR_%d"%ii)
         return confs
     else:
         return []
@@ -183,7 +183,7 @@ class TestPrepRunVasp(unittest.TestCase):
             if work_path.is_dir():
                 shutil.rmtree(work_path)
         for ii in [self.incar, self.potcar, self.optional_testfile]:
-            if ii.is_file():
+            if Path(ii).is_file():
                 os.remove(ii)
         for ii in self.confs:
             if ii.is_file():
