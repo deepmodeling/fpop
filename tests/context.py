@@ -4,9 +4,10 @@ sys.path.insert(0,fpop_path)
 import fpop
 upload_python_packages = [os.path.join(fpop_path, 'fpop')]
 if os.getenv('SKIP_UT_WITH_DFLOW'):
-    if(os.getenv('SKIP_UT_WITH_DFLOW')==0):
+    if(int(os.getenv('SKIP_UT_WITH_DFLOW'))==0):
         skip_ut_with_dflow=0
     else:
+        print("bbbbbbbb")
         skip_ut_with_dflow=1
     skip_ut_with_dflow_reason = 'skip because environment variable SKIP_UT_WITH_DFLOW is set to non-zero'
 else:
