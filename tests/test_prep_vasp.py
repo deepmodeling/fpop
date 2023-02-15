@@ -82,6 +82,8 @@ def dump_conf_from_poscar(
         for ii in range(len(conf_list)):
             confs.append(Path("POSCAR_%d"%ii))
         return confs
+    else:
+        return []
 
 class TestPrepVaspDpConf(unittest.TestCase):
     '''
