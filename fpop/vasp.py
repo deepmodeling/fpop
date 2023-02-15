@@ -254,11 +254,23 @@ class RunVasp(RunFp):
             raise TransientError(
                 "vasp failed\n", "out msg", out, "\n", "err msg", err, "\n"
             )
+        if not self.check_run_success():
+            raise TransientError(
+                "vasp failed , we could not check the exact cause . Please check log file ."
+            )
         os.makedirs(Path(backward_dir_name))
         shutil.copyfile(log_name,Path(backward_dir_name)/log_name)
         for ii in backward_list:
             shutil.copyfile(ii,Path(backward_dir_name)/ii)
         return backward_dir_name
+    
+    def check_run_success(self):
+        with open("OUTCAR","r") as f:
+            lines = f.readlines()
+        if "Voluntary" in lines[-1]:
+            return True
+        else:
+            return False
 
     @staticmethod
     def args():

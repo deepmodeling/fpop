@@ -31,22 +31,25 @@ class TestRunVasp(unittest.TestCase):
     def test_success(self, mocked_run):
         mocked_run.side_effect = [ (0, 'out\n', '') ]
         op = RunVasp()
-        out = op.execute(
-            OPIO({
-                'config' :{
-                    'run': {
-                        'command' : 'myvasp',
+        def new_check_run_success(obj):
+            pass
+        with mock.patch.object(fpop.vasp.RunVasp, "check_run_success", new=new_check_run_success):
+            out = op.execute(
+                OPIO({
+                    'config' :{
+                        'run': {
+                            'command' : 'myvasp',
+                        },
                     },
-                },
-                'task_name' : self.task_name,
-                'task_path' : self.task_path,
-                'backward_list' : ['POSCAR','TEST1'],
-                'backward_dir_name' : 'our_backward',
-                'log_name' : 'our_log',
-                'optional_input' : {},
-                'optional_artifact' : {'TEST1':'','TEST2':''},
-            })
-        )
+                    'task_name' : self.task_name,
+                    'task_path' : self.task_path,
+                    'backward_list' : ['POSCAR','TEST1'],
+                    'backward_dir_name' : 'our_backward',
+                    'log_name' : 'our_log',
+                    'optional_input' : {},
+                    'optional_artifact' : {'TEST1':'','TEST2':''},
+                })
+            )
         work_dir = Path(self.task_name)
         # check call
         calls = [
@@ -69,21 +72,25 @@ class TestRunVasp(unittest.TestCase):
     def test_success_without_optional_parameter(self, mocked_run):
         mocked_run.side_effect = [ (0, 'out\n', '') ]
         op = RunVasp()
-        out = op.execute(
-            OPIO({
-                'config' :{
-                    'run': {
-                        'command' : 'myvasp',
+        def new_check_run_success(obj):
+            pass
+        with mock.patch.object(fpop.vasp.RunVasp, "check_run_success", new=new_check_run_success):
+            out = op.execute(
+                OPIO({
+                    'config' :{
+                        'run': {
+                            'command' : 'myvasp',
+                        },
                     },
-                },
-                'task_name' : self.task_name,
-                'task_path' : self.task_path,
-                'backward_list' : ['POSCAR','TEST1'],
-                'backward_dir_name' : 'our_backward',
-                'log_name' : 'our_log',
-                'optional_artifact' : {'TEST1':'','TEST2':''},
-            })
-        )
+                    'task_name' : self.task_name,
+                    'task_path' : self.task_path,
+                    'backward_list' : ['POSCAR','TEST1'],
+                    'backward_dir_name' : 'our_backward',
+                    'log_name' : 'our_log',
+                    'optional_input' : {},
+                    'optional_artifact' : {'TEST1':'','TEST2':''},
+                })
+            )
         work_dir = Path(self.task_name)
         # check call
         calls = [
