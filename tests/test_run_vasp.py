@@ -33,7 +33,7 @@ class TestRunVasp(unittest.TestCase):
         op = RunVasp()
         def new_check_run_success(obj):
             return True
-        with mock.patch.object(fpop.vasp.RunVasp, "check_run_success", new=new_check_run_success):
+        with mock.patch.object(RunVasp, "check_run_success", new=new_check_run_success):
             out = op.execute(
                 OPIO({
                     'config' :{
@@ -74,7 +74,7 @@ class TestRunVasp(unittest.TestCase):
         op = RunVasp()
         def new_check_run_success(obj):
             return True
-        with mock.patch.object(fpop.vasp.RunVasp, "check_run_success", new=new_check_run_success):
+        with mock.patch.object(RunVasp, "check_run_success", new=new_check_run_success):
             out = op.execute(
                 OPIO({
                     'config' :{
