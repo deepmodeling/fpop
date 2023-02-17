@@ -132,7 +132,7 @@ class PrepFp(OP, ABC):
         """
 
         try:
-            prepare_config = ip['config']['prepare']
+            prepare_config = ip['config']['prep']
         except:
             prepare_config = None
         inputs = ip['inputs']

@@ -63,19 +63,6 @@ from constants import POSCAR_1_content,POSCAR_2_content
 upload_packages.append("../fpop")
 upload_packages.append("./context.py")
 
-default_config = {
-        "prep":{
-            "template_config" : {
-                "image" : default_image,
-            },  
-        },
-        "run":{
-            "template_config" : {
-                "image" : default_image,
-            },  
-        },
-    }
-
 def dump_conf_from_poscar(
         type, 
         conf_list
@@ -210,8 +197,8 @@ class TestPrepRunVasp(unittest.TestCase):
             "prep-run-vasp",
             PrepVasp,
             MockedRunVasp,
-            prep_config = default_config["prep"],
-            run_config = default_config["run"],
+            prep_image = default_image,
+            run_image = default_image,
         )
         vasp_inputs = VaspInputs(
             0.3,
@@ -224,7 +211,6 @@ class TestPrepRunVasp(unittest.TestCase):
             template = steps,
             parameters = {
                 'type_map' : self.type_map,
-                'config' : default_config,
                 'inputs' : vasp_inputs,
                 'optional_input' : {"conf_format" : "vasp/poscar"},
                 'backward_list' : ['POSCAR','POTCAR','TEST'],

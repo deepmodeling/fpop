@@ -271,29 +271,3 @@ class RunVasp(RunFp):
             return True
         else:
             return False
-
-    @staticmethod
-    def args():
-        r'''The argument definition of the `run_task` method.
-        Returns
-        -------
-        arguments: List[dargs.Argument]
-            List of dargs.Argument defines the arguments of `run_task` method.
-        '''
-
-        doc_vasp_cmd = "The command of VASP"
-        doc_vasp_log = "The log file name of VASP"
-        doc_vasp_out = "The output dir name of labeled data. In `deepmd/npy` format provided by `dpdata`."
-        return [
-            Argument("command", str, optional=True, default="vasp", doc=doc_vasp_cmd),
-            Argument(
-                "out",
-                str,
-                optional=True,
-                default="data",
-                doc=doc_vasp_out,
-            ),
-            Argument(
-                "log", str, optional=True, default="fp.log", doc=doc_vasp_log
-            ),
-        ]

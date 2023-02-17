@@ -133,37 +133,6 @@ class RunFp(OP, ABC):
         '''
         pass
 
-    @staticmethod
-    @abstractmethod
-    def args() -> List[dargs.Argument]:
-        r'''The argument definition of the `run_task` method.
-        Returns
-        -------
-        arguments: List[dargs.Argument]
-            List of dargs.Argument defines the arguments of `run_task` method.
-        '''
-        pass
-
-    @classmethod
-    def normalize_config(cls, data: Dict = {}, strict: bool = True) -> Dict:
-        r'''Normalized the argument.
-        Parameters
-        ----------
-        data: Dict
-            The input dict of arguments.
-        strict: bool
-            Strictly check the arguments.
-        Returns
-        -------
-        data: Dict
-            The normalized arguments.
-        '''
-        ta = cls.args()
-        base = dargs.Argument("base", dict, ta)
-        data = base.normalize_value(data, trim_pattern="_*")
-        base.check_value(data, strict=strict)
-        return data
-
     @OP.exec_sign_check
     def execute(
         self,
@@ -197,7 +166,6 @@ class RunFp(OP, ABC):
         log_name = ip["log_name"] 
         backward_list = ip["backward_list"]
         run_config = ip["config"]["run"] if ip["config"]["run"] is not None else {}
-        run_config = type(self).normalize_config(run_config, strict=False)
         optional_input = ip["optional_input"]
         task_name = ip["task_name"]
         task_path = ip["task_path"]
