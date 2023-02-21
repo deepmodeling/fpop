@@ -108,8 +108,8 @@ def _prep_run_fp(
         run_op : OP,
         prep_image,
         run_image,
-        prep_config : Optional[dict] = None,
-        run_config : Optional[dict] = None,
+        prep_config : Optional[dict] = {},
+        run_config : Optional[dict] = {},
         upload_python_packages : Optional[List[os.PathLike]] = None,
 ):
     prep_config = deepcopy(prep_config)
@@ -124,7 +124,6 @@ def _prep_run_fp(
     else:
         prep_template_config = {}
     
-    print(prep_template_config)
     prep_fp = Step(
         'prep-fp' , 
         template=PythonOPTemplate(
