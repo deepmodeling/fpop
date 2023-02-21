@@ -132,7 +132,7 @@ def _prep_run_fp(
                 "task_paths": None
             },
             python_packages = upload_python_packages,
-            image = prep_image
+            image = prep_image,
             **prep_template_config,
         ),
         parameters={
@@ -161,7 +161,7 @@ def _prep_run_fp(
                 output_artifact = ["backward_dir"],
             ),
             python_packages = upload_python_packages,
-            image = run_image
+            image = run_image,
             **run_template_config,
         ),
         parameters={
