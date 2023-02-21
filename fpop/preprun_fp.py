@@ -118,10 +118,12 @@ def _prep_run_fp(
         command = run_config.pop("command") if "command" in run_config.keys() else None
         run_template_config = run_config.pop('template_config') if 'template_config' in run_config.keys() else {}
     else:
+        run_config = {}
         run_template_config = {}
     if prep_config:
         prep_template_config = prep_config.pop('template_config') if 'template_config' in prep_config.keys() else {}
     else:
+        prep_config = {}
         prep_template_config = {}
     
     prep_fp = Step(
