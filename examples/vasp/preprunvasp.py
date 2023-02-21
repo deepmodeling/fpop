@@ -29,15 +29,11 @@ from copy import deepcopy
 
 fp_config={
     "prep":{
-        "template_config": {
-            "image": "dptechnology/dpgen2:latest",
-        },
+        "template_config": {},
     },
     "run":{
         "command": "source /opt/intel/oneapi/setvars.sh && ulimit -s unlimited && mpirun -n 64 /opt/vasp.5.4.4/bin/vasp_std",
-        "template_config": {
-            "image": "",
-        },
+        "template_config": {},
         "executor":{
             "type":"dispatcher",
             "machine_dict":{
@@ -62,6 +58,8 @@ steps = PrepRunFp(
     "prep-run-vasp",
     PrepVasp,
     RunVasp,
+    prep_image = "",
+    run_image = "",
     prep_config,
     run_config,
 )
