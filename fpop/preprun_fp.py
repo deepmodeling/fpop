@@ -116,9 +116,8 @@ def _prep_run_fp(
     run_config = deepcopy(run_config)
     if run_config:
         command = run_config.pop("command") if "command" in run_config.keys() else None
-        run_template_config = run_config.pop('template_config') if 'template_config' in run_config.keys() else {}
-    if prep_config:
-        prep_template_config = prep_config.pop('template_config') if 'template_config' in prep_config.keys() else {}
+    run_template_config = run_config.pop('template_config') if not run_config and 'template_config' in run_config.keys() else {}
+    prep_template_config = prep_config.pop('template_config') if not prep_config and 'template_config' in prep_config.keys() else {}
 
     prep_fp = Step(
         'prep-fp' , 
