@@ -58,8 +58,8 @@ steps = PrepRunFp(
     "prep-run-vasp",
     PrepVasp,
     RunVasp,
-    prep_image = "",
-    run_image = "",
+    prep_image = "prep_image",
+    run_image = "run_image",
     prep_config,
     run_config,
 )
