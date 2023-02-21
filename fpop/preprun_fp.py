@@ -123,7 +123,8 @@ def _prep_run_fp(
         prep_template_config = prep_config.pop('template_config') if 'template_config' in prep_config.keys() else {}
     else:
         prep_template_config = {}
-
+    
+    print(prep_template_config)
     prep_fp = Step(
         'prep-fp' , 
         template=PythonOPTemplate(
