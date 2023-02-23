@@ -114,13 +114,18 @@ def _prep_run_fp(
         run_op : OP,
         prep_image,
         run_image,
-        prep_template_config : Optional[dict] = {},
-        prep_step_config : Optional[dict] = {},
-        run_template_config : Optional[dict] = {},
-        run_slice_config : Optional[dict] = {},
-        run_step_config : Optional[dict] = {},
+        prep_template_config : Optional[dict] = None,
+        prep_step_config : Optional[dict] = None,
+        run_template_config : Optional[dict] = None,
+        run_slice_config : Optional[dict] = None,
+        run_step_config : Optional[dict] = None,
         upload_python_packages : Optional[List[os.PathLike]] = None,
 ):
+    if not prep_template_config: prep_template_config = {},
+    if not prep_step_config: prep_step_config = {},
+    if not run_template_config: run_template_config = {},
+    if not run_slice_config: run_slice_config = {},
+    if not run_step_config: run_step_config = {},
     prep_fp = Step(
         'prep-fp' , 
         template=PythonOPTemplate(
