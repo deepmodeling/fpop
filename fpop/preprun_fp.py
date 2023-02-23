@@ -121,11 +121,11 @@ def _prep_run_fp(
         run_step_config : Optional[dict] = None,
         upload_python_packages : Optional[List[os.PathLike]] = None,
 ):
-    if not prep_template_config: prep_template_config = dict(),
-    if not prep_step_config: prep_step_config = dict(),
-    if not run_template_config: run_template_config = dict(),
-    if not run_slice_config: run_slice_config = dict(),
-    if not run_step_config: run_step_config = dict(),
+    if not prep_template_config: prep_template_config = {}
+    if not prep_step_config: prep_step_config = {}
+    if not run_template_config: run_template_config = {}
+    if not run_slice_config: run_slice_config = {}
+    if not run_step_config: run_step_config = {}
     prep_fp = Step(
         'prep-fp' , 
         template=PythonOPTemplate(
