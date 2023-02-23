@@ -37,9 +37,7 @@ class TestRunVasp(unittest.TestCase):
             out = op.execute(
                 OPIO({
                     'run_image_config' :{
-                        'run': {
-                            'command' : 'myvasp',
-                        },
+                        'command' : 'myvasp',
                     },
                     'task_name' : self.task_name,
                     'task_path' : self.task_path,
@@ -78,9 +76,7 @@ class TestRunVasp(unittest.TestCase):
             out = op.execute(
                 OPIO({
                     'run_image_config' :{
-                        'run': {
-                            'command' : 'myvasp',
-                        },
+                        'command' : 'myvasp',
                     },
                     'task_name' : self.task_name,
                     'task_path' : self.task_path,
@@ -116,9 +112,7 @@ class TestRunVasp(unittest.TestCase):
             out = op.execute(
             OPIO({
                 'run_image_config' :{
-                    'run': {
-                        'command' : 'myvasp',
-                    },
+                    'command' : 'myvasp',
                 },
                 'task_name' : self.task_name,
                 'task_path' : self.task_path,
@@ -141,9 +135,7 @@ class TestRunVasp(unittest.TestCase):
             out = op.execute(
             OPIO({
                 'run_image_config' :{
-                    'run': {
-                        'command' : 'myvasp',
-                    },
+                    'command' : 'myvasp',
                 },
                 'task_name' : self.task_name,
                 'task_path' : self.task_path,
