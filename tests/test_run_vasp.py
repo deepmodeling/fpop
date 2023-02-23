@@ -87,7 +87,6 @@ class TestRunVasp(unittest.TestCase):
                     'backward_list' : ['POSCAR','TEST1'],
                     'backward_dir_name' : 'our_backward',
                     'log_name' : 'our_log',
-                    'optional_input' : {},
                     'optional_artifact' : {'TEST1':Path(''),'TEST2':Path('')},
                 })
             )
