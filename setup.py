@@ -4,7 +4,7 @@ with open("README.md", "r") as fh:
     long_description = fh.read()
 
 setuptools.setup(
-    name="fpoptest",
+    name="fpop",
     version="0.0.1",
     author="Chengqian Zhang",
     author_email="2043899742@qq.com",
