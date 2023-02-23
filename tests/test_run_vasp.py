@@ -47,7 +47,7 @@ class TestRunVasp(unittest.TestCase):
                     'backward_dir_name' : 'our_backward',
                     'log_name' : 'our_log',
                     'optional_input' : {},
-                    'optional_artifact' : {'TEST1':None,'TEST2':None},
+                    'optional_artifact' : {'TEST1':Path(''),'TEST2':Path('')},
                 })
             )
         work_dir = Path(self.task_name)
