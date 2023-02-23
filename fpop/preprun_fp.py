@@ -38,8 +38,11 @@ class PrepRunFp(Steps):
         run_op : OP,
         prep_image : str,
         run_image : str,
-        prep_config : Optional[dict] = None,
-        run_config : Optional[dict] = None,
+        prep_template_config : Optional[dict] = None,
+        prep_step_config : Optional[dict] = None,
+        run_template_config : Optional[dict] = None,
+        run_slice_config : Optional[dict] = None,
+        run_step_config : Optional[dict] = None,
         upload_python_packages : Optional[List[os.PathLike]] = None,
     ):
         self._input_parameters = {
@@ -80,8 +83,11 @@ class PrepRunFp(Steps):
             run_op,
             prep_image,
             run_image,
-            prep_config,
-            run_config,
+            prep_template_config,
+            prep_step_config,
+            run_template_config,
+            run_slice_config,
+            run_step_config,
             upload_python_packages = upload_python_packages,
         )
 
@@ -108,24 +114,13 @@ def _prep_run_fp(
         run_op : OP,
         prep_image,
         run_image,
-        prep_config : Optional[dict] = {},
-        run_config : Optional[dict] = {},
+        prep_template_config : Optional[dict] = {},
+        prep_step_config : Optional[dict] = {},
+        run_template_config : Optional[dict] = {},
+        run_slice_config : Optional[dict] = {},
+        run_step_config : Optional[dict] = {},
         upload_python_packages : Optional[List[os.PathLike]] = None,
 ):
-    prep_config = deepcopy(prep_config)
-    run_config = deepcopy(run_config)
-    if run_config:
-        command = run_config.pop("command") if "command" in run_config.keys() else None
-        run_template_config = run_config.pop('template_config') if 'template_config' in run_config.keys() else {}
-    else:
-        run_config = {}
-        run_template_config = {}
-    if prep_config:
-        prep_template_config = prep_config.pop('template_config') if 'template_config' in prep_config.keys() else {}
-    else:
-        prep_config = {}
-        prep_template_config = {}
-    
     prep_fp = Step(
         'prep-fp' , 
         template=PythonOPTemplate(
@@ -148,7 +143,7 @@ def _prep_run_fp(
             "optional_artifact" : prep_run_steps.inputs.artifacts['optional_artifact'],
         },
         key = step_keys['prep-fp'],
-        **prep_config,    
+        **prep_step_config,    
     )
     prep_run_steps.add(prep_fp)
 
@@ -161,6 +156,7 @@ def _prep_run_fp(
                 input_parameter = ["task_name"],
                 input_artifact = ["task_path"],
                 output_artifact = ["backward_dir"],
+                **run_slice_config,
             ),
             python_packages = upload_python_packages,
             image = run_image,
@@ -180,7 +176,7 @@ def _prep_run_fp(
         },
         with_sequence=argo_sequence(argo_len(prep_fp.outputs.parameters["task_names"]), format='%06d'),
         key = step_keys['run-fp'],
-        **run_config,
+        **run_step_config,
     )
     prep_run_steps.add(run_fp)
 
