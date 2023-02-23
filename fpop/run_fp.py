@@ -42,13 +42,16 @@ from dargs import (
 @contextmanager
 def set_directory(path: Path):
     '''Sets the current working path within the context.
+
     Parameters
     ----------
     path : Path
         The path to the cwd
+
     Yields
     ------
     None
+
     Examples
     --------
     >>> with set_directory("some_path"):
