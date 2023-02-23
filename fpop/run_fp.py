@@ -164,6 +164,7 @@ class RunFp(OP, ABC):
         FatalError
             When mandatory files are not found.
         '''
+        run_image_config = ip["run_image_config"]
         backward_dir_name = ip["backward_dir_name"] 
         log_name = ip["log_name"] 
         backward_list = ip["backward_list"]

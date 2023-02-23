@@ -134,6 +134,7 @@ class PrepFp(OP, ABC):
         inputs = ip['inputs']
         confs = ip['confs']
         type_map = ip['type_map']
+        prep_image_config = ip["prep_image_config"]
         optional_artifact = ip["optional_artifact"]
         optional_input = ip["optional_input"]
         try:
