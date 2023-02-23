@@ -88,7 +88,7 @@ class TestRunVasp(unittest.TestCase):
                     'backward_dir_name' : 'our_backward',
                     'log_name' : 'our_log',
                     'optional_input' : {},
-                    'optional_artifact' : {'TEST1':'','TEST2':''},
+                    'optional_artifact' : {'TEST1':Path(''),'TEST2':Path('')},
                 })
             )
         work_dir = Path(self.task_name)
@@ -125,7 +125,7 @@ class TestRunVasp(unittest.TestCase):
                 'task_path' : self.task_path,
                 'backward_list' : ['POSCAR','TEST1'],
                 'optional_input' : {},
-                'optional_artifact' : {'TEST1':'','TEST2':''},
+                'optional_artifact' : {'TEST1':Path(''),'TEST2':Path('')},
             })
         )
         # check call
@@ -149,7 +149,7 @@ class TestRunVasp(unittest.TestCase):
                 'task_name' : self.task_name,
                 'task_path' : self.task_path,
                 'backward_list' : ['POSCAR','TEST1'],
-                'optional_artifact' : {'TEST1':'','TEST2':''},
+                'optional_artifact' : {'TEST1':Path(''),'TEST2':Path('')},
             })
         )
         # check call
