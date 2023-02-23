@@ -123,7 +123,7 @@ class TestPrepVaspDpConf(unittest.TestCase):
         out = op.execute(
             OPIO(
                 {
-                    "config" : {},
+                    "prep_image_config" : {},
                     "optional_input" : {},
                     "confs" : self.confs,
                     "inputs" : vasp_inputs,
@@ -198,7 +198,7 @@ class TestPrepRunVaspPoscarConf(unittest.TestCase):
                 "optional_artifact":upload_artifact({"TEST":Path("optional_test")}),
             },
             parameters={
-                "config" : {},
+                "prep_image_config" : {},
                 "inputs" : vi ,
                 "optional_input" : {},
                 "type_map" : self.type_map,

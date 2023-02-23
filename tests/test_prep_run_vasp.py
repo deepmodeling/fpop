@@ -128,7 +128,7 @@ class TestMockedRunVasp(unittest.TestCase):
                 'task_path' : self.task_list[ii],
                 'log_name' : "my_log",
                 'backward_dir_name' : "my_backward",
-                "config" : {},
+                "run_image_config" : {},
                 "optional_artifact" : {},
                 "backward_list" : ['POSCAR','POTCAR'],
                 "optional_input" : {},

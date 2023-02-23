@@ -36,7 +36,7 @@ class TestRunVasp(unittest.TestCase):
         with mock.patch.object(RunVasp, "check_run_success", new=new_check_run_success):
             out = op.execute(
                 OPIO({
-                    'config' :{
+                    'run_image_config' :{
                         'run': {
                             'command' : 'myvasp',
                         },
@@ -77,7 +77,7 @@ class TestRunVasp(unittest.TestCase):
         with mock.patch.object(RunVasp, "check_run_success", new=new_check_run_success):
             out = op.execute(
                 OPIO({
-                    'config' :{
+                    'run_image_config' :{
                         'run': {
                             'command' : 'myvasp',
                         },
@@ -116,7 +116,7 @@ class TestRunVasp(unittest.TestCase):
         with self.assertRaises(TransientError) as ee:
             out = op.execute(
             OPIO({
-                'config' :{
+                'run_image_config' :{
                     'run': {
                         'command' : 'myvasp',
                     },
@@ -141,7 +141,7 @@ class TestRunVasp(unittest.TestCase):
         with self.assertRaises(TransientError) as ee:
             out = op.execute(
             OPIO({
-                'config' :{
+                'run_image_config' :{
                     'run': {
                         'command' : 'myvasp',
                     },

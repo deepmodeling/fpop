@@ -110,16 +110,6 @@ class VaspInputs():
             Argument("kgamma", bool, optional=True, default=True, doc=doc_kgamma),
         ]
 
-    @staticmethod
-    def normalize_config(data = {}, strict=True):
-        ta = VaspInputs.args()
-        base = Argument("base", dict, ta)
-        data = base.normalize_value(data, trim_pattern="_*")
-        base.check_value(data, strict=strict)
-        return data
-
-
-
 def make_kspacing_kpoints(box, kspacing, kgamma) :
     if type(kspacing) is not list:
         kspacing = [kspacing, kspacing, kspacing]
@@ -166,7 +156,7 @@ class PrepVasp(PrepFp):
             self,
             conf_frame: dpdata.System,
             vasp_inputs: VaspInputs,
-            prepare_config: Optional[Dict] = None,
+            prepare_image_config: Optional[Dict] = None,
             optional_input: Optional[Dict] = None,
             optional_artifact: Optional[Dict] = None,
     ):
@@ -178,7 +168,7 @@ class PrepVasp(PrepFp):
             One frame of configuration in the dpdata format.
         inputs: VaspInputs
             The VaspInputs object handels all other input files of the task.
-        prepare_config: Dict
+        prepare_image_config: Dict
             Definition of runtime parameters in the process of preparing tasks. 
         optional_input: 
             Other parameters the developers or users may need.
@@ -220,7 +210,7 @@ class RunVasp(RunFp):
         backward_dir_name,
         log_name,
         backward_list: List[str],
-        run_config: Optional[Dict]=None,
+        run_image_config: Optional[Dict]=None,
         optional_input: Optional[Dict]=None,
     ) -> str:
         r'''Defines how one FP task runs
@@ -232,9 +222,8 @@ class RunVasp(RunFp):
             The name of log file.
         backward_list:
             The output files the users need.
-        run_config:
+        run_image_config:
             Keyword args defined by the developer.
-            The fp/run_config session of the input file will be passed to this function.
         optional_input:
             The parameters developers need in runtime.
         
@@ -243,8 +232,8 @@ class RunVasp(RunFp):
         backward_dir_name: str
             The directory name which containers the files users need.
         '''
-        if run_config:
-            command = run_config["command"]
+        if run_image_config:
+            command = run_image_config["command"]
         else:
             command = "vasp_std"
         # run vasp

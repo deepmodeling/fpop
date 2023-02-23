@@ -63,7 +63,7 @@ class PrepFp(OP, ABC):
             "inputs" : BigParameter(object),
             "type_map": List[str],
             "confs" : Artifact(List[Path]),
-            "config" : BigParameter(dict,default={}),
+            "prep_image_config" : BigParameter(dict,default={}),
             "optional_input" : BigParameter(dict,default={}),
             "optional_artifact" : Artifact(Dict[str,Path],optional=True)
         })
@@ -80,7 +80,7 @@ class PrepFp(OP, ABC):
             self,
             conf_frame: dpdata.System,
             inputs: Any,
-            prepare_config: Optional[Dict] = None,
+            prepare_image_config: Optional[Dict] = None,
             optional_input: Optional[Dict] = None,
             optional_artifact: Optional[Dict] = None,
     ):
@@ -93,7 +93,7 @@ class PrepFp(OP, ABC):
         inputs: Any
             The class object handels all other input files of the task. 
             For example, pseudopotential file, k-point file and so on.
-        prepare_config: Dict
+        prepare_image_config: Dict
             Definition of runtime parameters in the process of preparing tasks. 
         optional_input: 
             Other parameters the developers or users may need.
@@ -114,7 +114,7 @@ class PrepFp(OP, ABC):
         ip : dict
             Input dict with components:
 
-            - `config` : (`dict`) May have `config['prepare']`, which defines the parameters of the process of preparing FP tasks.
+            - `prep_image_config` : (`dict`) It defines the parameters of the process of preparing FP tasks.
             - `inputs` : (`object`) The class object handels all other input files of the task. For example, pseudopotential file, k-point file and so on.
             - `type_map` : (`List[str]`) The list of elements.
             - `confs` : (`Artifact(List[Path])`) Configurations for the FP tasks. Stored in folders as formats which can be read by dpdata.System. 
@@ -131,10 +131,6 @@ class PrepFp(OP, ABC):
             - `task_paths`: (`Artifact(List[Path])`) The parepared working paths of the tasks. Contains all input files needed to start the FP. The order fo the Paths should be consistent with `op["task_names"]`
         """
 
-        try:
-            prepare_config = ip['config']['prep']
-        except:
-            prepare_config = None
         inputs = ip['inputs']
         confs = ip['confs']
         type_map = ip['type_map']
@@ -154,7 +150,7 @@ class PrepFp(OP, ABC):
         for system in confs:
             ss = dpdata.System(system, fmt=conf_format, labeled=False)
             for ff in range(ss.get_nframes()):
-                nn, pp = self._exec_one_frame(counter, inputs, ss[ff], prepare_config, optional_input, optional_artifact)
+                nn, pp = self._exec_one_frame(counter, inputs, ss[ff], prepare_image_config, optional_input, optional_artifact)
                 task_names.append(nn)
                 task_paths.append(pp)
                 counter += 1
@@ -170,12 +166,12 @@ class PrepFp(OP, ABC):
             idx,
             inputs,
             conf_frame : dpdata.System,
-            prepare_config = None,
+            prepare_image_config = None,
             optional_input = None,
             optional_artifact = None,
     ) -> Tuple[str, Path]:
         task_name = 'task.' + '%06d' % idx
         task_path = Path(task_name)
         with set_directory(task_path):
-            self.prep_task(conf_frame, inputs, prepare_config, optional_input, optional_artifact)
+            self.prep_task(conf_frame, inputs, prepare_image_config, optional_input, optional_artifact)
         return task_name, task_path

@@ -81,7 +81,7 @@ class RunFp(OP, ABC):
                 "backward_list": List[str],
                 "log_name": Parameter(str,default='log'),
                 "backward_dir_name": Parameter(str,default='backward_dir'),
-                "config": BigParameter(dict,default={}),
+                "run_image_config": BigParameter(dict,default={}),
                 "optional_artifact": Artifact(Dict[str,Path],optional=True),
                 "optional_input": BigParameter(dict,default={})
             }
@@ -111,7 +111,7 @@ class RunFp(OP, ABC):
         backward_dir_name,
         log_name,
         backward_list: List[str],
-        run_config: Optional[Dict]=None,
+        run_image_config: Optional[Dict]=None,
         optional_input: Optional[Dict]=None,
     ) -> str:
         r'''Defines how one FP task runs
@@ -123,9 +123,8 @@ class RunFp(OP, ABC):
             The name of log file.
         backward_list:
             The output files the users need.
-        run_config:
+        run_image_config:
             Keyword args defined by the developer.
-            The fp/run_config session of the input file will be passed to this function.
         optional_input:
             The parameters developers need in runtime.
         
@@ -151,7 +150,7 @@ class RunFp(OP, ABC):
             - `backward_list`: (`List[str]`) The output files the users need.
             - `log_name`: (`str`) The name of log file.
             - `backward_dir_name`: (`str`) The name of the directory which contains the backward files.
-            - `config`: (`dict`) The config of FP task. May have `config['run']`, which defines the runtime configuration of the FP task.
+            - `run_image_config`: (`dict`) It defines the runtime configuration of the FP task.
             - `optional_artifact` : (`Artifact(Dict[str,Path])`) Other files that users or developers need.
             - `optional_input` : (`dict`) Other parameters the developers or users may need.
         Returns
@@ -168,7 +167,6 @@ class RunFp(OP, ABC):
         backward_dir_name = ip["backward_dir_name"] 
         log_name = ip["log_name"] 
         backward_list = ip["backward_list"]
-        run_config = ip["config"]["run"] if ip["config"]["run"] is not None else {}
         optional_input = ip["optional_input"]
         task_name = ip["task_name"]
         task_path = ip["task_path"]
@@ -191,7 +189,7 @@ class RunFp(OP, ABC):
                 if os.path.isfile(ii):
                     iname = ii.name
                     Path(iname).symlink_to(ii)
-            backward_dir_name = self.run_task(backward_dir_name,log_name,backward_list,run_config,optional_input)
+            backward_dir_name = self.run_task(backward_dir_name,log_name,backward_list,run_image_config,optional_input)
 
         return OPIO(
             {

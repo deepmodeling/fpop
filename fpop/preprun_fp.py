@@ -49,7 +49,8 @@ class PrepRunFp(Steps):
             "inputs" : InputParameter(),
             "type_map" : InputParameter(),
             "backward_list" : InputParameter(),
-            "config" : InputParameter(type=dict , value={}),
+            "prep_image_config" : InputParameter(type=dict , value={}),
+            "run_image_config" : InputParameter(type=dict , value={}),
             "optional_input" : InputParameter(type=dict , value={}),
             "log_name" : InputParameter(type=str , value="log"),
             "backward_dir_name" : InputParameter(type=str , value="backward_dir"),
@@ -138,7 +139,7 @@ def _prep_run_fp(
             **prep_template_config,
         ),
         parameters={
-            "config" : prep_run_steps.inputs.parameters["config"],
+            "prep_image_config" : prep_run_steps.inputs.parameters["prep_image_config"],
             "inputs" : prep_run_steps.inputs.parameters["inputs"],
             "type_map" : prep_run_steps.inputs.parameters["type_map"],
             "optional_input" : prep_run_steps.inputs.parameters["optional_input"],
@@ -168,7 +169,7 @@ def _prep_run_fp(
             **run_template_config,
         ),
         parameters={
-            "config" : prep_run_steps.inputs.parameters["config"],
+            "run_image_config" : prep_run_steps.inputs.parameters["run_image_config"],
             "task_name" : prep_fp.outputs.parameters["task_names"],
             "backward_list" : prep_run_steps.inputs.parameters["backward_list"],
             "log_name" : prep_run_steps.inputs.parameters["log_name"],
