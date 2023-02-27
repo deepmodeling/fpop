@@ -32,7 +32,6 @@ jobs:
         export BOHRIUM_PROJECT_ID=${{ secrets.BOHRIUM_PROJECT_ID }}
         cd tests 
         export SKIP_UT_WITH_DFLOW=0 
-        export DFLOW_DEBUG=0
         coverage run -m unittest -v -f 
         coverage report
     - uses: codecov/codecov-action@v3
