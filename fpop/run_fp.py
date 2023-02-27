@@ -1,5 +1,5 @@
 from abc import ABC,abstractmethod
-from contextlib import contextmanager
+from dflow.utils import set_directory
 from dflow.python import (
     OP,
     OPIO,
@@ -38,32 +38,6 @@ from dargs import (
     Variant,
     ArgumentEncoder,
 )
-
-@contextmanager
-def set_directory(path: Path):
-    '''Sets the current working path within the context.
-
-    Parameters
-    ----------
-    path : Path
-        The path to the cwd
-
-    Yields
-    ------
-    None
-
-    Examples
-    --------
-    >>> with set_directory("some_path"):
-    ...    do_something()
-    '''
-    cwd = Path().absolute()
-    path.mkdir(exist_ok=True, parents=True)
-    try:
-        os.chdir(path)
-        yield
-    finally:
-        os.chdir(cwd)
 
 class RunFp(OP, ABC):
     r'''Execute a first-principles (FP) task.
