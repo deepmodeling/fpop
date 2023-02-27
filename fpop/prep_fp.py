@@ -150,6 +150,6 @@ class PrepFp(OP, ABC):
     ) -> Tuple[str, Path]:
         task_name = 'task.' + '%06d' % idx
         task_path = Path(task_name)
-        with set_directory(task_path):
+        with set_directory(task_path,mkdir=True):
             self.prep_task(conf_frame, inputs, prepare_image_config, optional_input, optional_artifact)
         return task_name, task_path

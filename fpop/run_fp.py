@@ -153,7 +153,7 @@ class RunFp(OP, ABC):
             opt_input_files.append(ss)
         opt_input_files = [(Path(task_path) / ii).resolve() for ii in opt_input_files]
 
-        with set_directory(work_dir):
+        with set_directory(work_dir,mkdir=True):
             # link input files
             for ii in input_files:
                 if not os.path.isfile(ii):
