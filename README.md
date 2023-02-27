@@ -1,2 +1,2 @@
 # fpop
-`fp` stands for first principle calculation and `op` stands for operators. The abbreviation `fpop` stands for operators related to first principle calculation.
+`fp` stands for first-principles calculation and `op` stands for operators. The abbreviation `fpop` stands for operators related to first-principles calculation.This project is base on dflow which is a Python framework for constructing scientific computing workflows (e.g. concurrent learning workflows) employing Argo Workflows as the workflow engine. 
