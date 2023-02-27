@@ -23,9 +23,16 @@ jobs:
         pip install mock coverage pytest
     - name: Test
       run: |
+        export DFLOW_HOST=${{ secrets.DFLOW_HOST }}
+        export DFLOW_K8S_API_SERVER=${{ secrets.DFLOW_K8S_API_SERVER }}
+        export DFLOW_S3_REPO_KEY=${{ secrets.DFLOW_S3_REPO_KEY }}
+        export DFLOW_S3_STORAGE_CLIENT=${{ secrets.DFLOW_S3_STORAGE_CLIENT }}
+        export BOHRIUM_USERNAME=${{ secrets.BOHRIUM_USERNAME }}
+        export BOHRIUM_PASSWORD=${{ secrets.BOHRIUM_PASSWORD }}
+        export BOHRIUM_PROJECT_ID=${{ secrets.BOHRIUM_PROJECT_ID }}
         cd tests 
         export SKIP_UT_WITH_DFLOW=0 
-        export DFLOW_DEBUG=1 
+        export DFLOW_DEBUG=0
         coverage run -m unittest -v -f 
         coverage report
     - uses: codecov/codecov-action@v3
