@@ -75,7 +75,7 @@ class PrepRunFp(Steps):
         )
 
         self._keys = ['prep-fp','run-fp']
-        self.step_keys = {'prep-fp':'prep-fp','run-fp':'run-fp'}
+        self.step_keys = {'prep-fp':'prep-fp','run-fp':'run-fp-{{item}}'}
 
         self = _prep_run_fp(
             self,
