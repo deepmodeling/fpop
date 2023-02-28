@@ -73,9 +73,14 @@ class PrepFp(OP, ABC):
         prepare_image_config: Dict
             Definition of runtime parameters in the process of preparing tasks. 
         optional_input: 
-            Other parameters the developers or users may need.
-        optional_artifact
-            Other files that users or developers need.
+            Other parameters the developers or users may need.For example:
+            {
+               "conf_format": "vasp/poscar"
+            }
+            optional_input["vasp/poscar"] is the format of the configurations that users give.
+            Other keys in optional_input are defined by different developers.
+        optional_artifact:
+            Other files that users or developers need.The using method of this part are defined by different developers.For example, in vasp part, all the files which are given in optional_artifact will be copied to the working directory.
         """
         pass
 
@@ -96,8 +101,13 @@ class PrepFp(OP, ABC):
             - `type_map` : (`List[str]`) The list of elements.
             - `confs` : (`Artifact(List[Path])`) Configurations for the FP tasks. Stored in folders as formats which can be read by dpdata.System. 
                 The format can be defined by parameter "conf_format" in "optional_input". The default format is deepmd/npy. 
-            - `optional_input` : (`dict`) Other parameters the developers or users may need.
-            - `optional_artifact` : (` Artifact(Dict[str,Path])`) Other files that users or developers need.
+            - `optional_input` : (`dict`) Other parameters the developers or users may need.For example:
+                                {
+                                  "conf_format": "vasp/poscar"
+                                }
+                                optional_input["vasp/poscar"] is the format of the configurations that users give.
+                                Other keys in optional_input are defined by different developers.
+            - `optional_artifact` : (` Artifact(Dict[str,Path])`) Other files that users or developers need.The using method of this part are defined by different developers.For example, in vasp part, all the files which are given in optional_artifact will be copied to the working directory.
 
         Returns
         -------

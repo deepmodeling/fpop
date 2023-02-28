@@ -100,7 +100,12 @@ class RunFp(OP, ABC):
         run_image_config:
             Keyword args defined by the developer.
         optional_input:
-            The parameters developers need in runtime.
+            The parameters developers need in runtime.For example:
+                                {
+                                  "conf_format": "vasp/poscar"
+                                }
+                                optional_input["vasp/poscar"] is the format of the configurations that users give.
+                                Other keys in optional_input are defined by different developers.
         
         Returns
         -------
@@ -125,8 +130,13 @@ class RunFp(OP, ABC):
             - `log_name`: (`str`) The name of log file.
             - `backward_dir_name`: (`str`) The name of the directory which contains the backward files.
             - `run_image_config`: (`dict`) It defines the runtime configuration of the FP task.
-            - `optional_artifact` : (`Artifact(Dict[str,Path])`) Other files that users or developers need.
-            - `optional_input` : (`dict`) Other parameters the developers or users may need.
+            - `optional_artifact` : (`Artifact(Dict[str,Path])`) Other files that users or developers need.Other files that users or developers need.The using method of this part are defined by different developers.For example, in vasp part, all the files which are given in optional_artifact will be copied to the working directory.
+            - `optional_input` : (`dict`) Other parameters the developers or users may need.For example:
+                                {
+                                  "conf_format": "vasp/poscar"
+                                }
+                                optional_input["vasp/poscar"] is the format of the configurations that users give.
+                                Other keys in optional_input are defined by different developers.
         Returns
         -------
             Output dict with components:

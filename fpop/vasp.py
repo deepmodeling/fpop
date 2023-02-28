@@ -171,9 +171,17 @@ class PrepVasp(PrepFp):
         prepare_image_config: Dict
             Definition of runtime parameters in the process of preparing tasks. 
         optional_input: 
-            Other parameters the developers or users may need.
+            Other parameters the developers or users may need.For example:
+            {
+               "oonf_format": "vasp/poscar"
+            }
+            optional_input["conf_format"]: The format of the configurations which users give.  
         optional_artifact
-            Other files that users or developers need.
+            Other files that users or developers need.For example:
+            {
+               "ICONST": Path("./iconst")
+            }
+            In vasp part, all the files which are given in optional_artifact will be copied to the work directory. In this example, "INCAR","POTCAR","POSCAR","KPOINTS" and "ICONST" will be copied to the same directory. "./iconst" is the path where the target file exists.
         """
 
         conf_frame.to('vasp/poscar', 'POSCAR')
@@ -221,11 +229,18 @@ class RunVasp(RunFp):
         log_name:
             The name of log file.
         backward_list:
-            The output files the users need.
+            The output files the users need.For example: ["OUTCAR","CONTCAR"]
         run_image_config:
-            Keyword args defined by the developer.
+            Keyword args defined by the developer.For example:
+            {
+              "command": "source /opt/intel/oneapi/setvars.sh && mpirun -n 64 /opt/vasp.5.4.4/bin/vasp_std"
+            }
         optional_input:
-            The parameters developers need in runtime.
+            The parameters developers need in runtime.For example:
+            {
+                "conf_format": "vasp/poscar"
+            }
+            optional_input["vasp/poscar"] is the format of the configurations that users give.
         
         Returns
         -------
