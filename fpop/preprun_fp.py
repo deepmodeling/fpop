@@ -44,7 +44,7 @@ class PrepRunFp(Steps):
         run_template_config : Optional[dict] = None,
         run_slice_config : Optional[dict] = None,
         run_step_config : Optional[dict] = None,
-        upload_python_packages : Optional[List[os.PathLike]] = None,
+        upload_python_packages : Optional[List[str]|List[Path]] = None,
     ):
         self._input_parameters = {
             "inputs" : InputParameter(),
