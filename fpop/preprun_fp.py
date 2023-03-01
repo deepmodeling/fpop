@@ -121,7 +121,7 @@ def _prep_run_fp(
         run_template_config : Optional[dict] = None,
         run_slice_config : Optional[dict] = None,
         run_step_config : Optional[dict] = None,
-        upload_python_packages : Optional[List[os.PathLike]] = None,
+        upload_python_packages : Optional[List[str]|List[Path]] = None,
 ):
     if not prep_template_config: prep_template_config = {}
     if not prep_step_config: prep_step_config = {}
