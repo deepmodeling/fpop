@@ -5,7 +5,7 @@ with open("README.md", "r") as fh:
 
 setuptools.setup(
     name="fpop",
-    version="0.0.1",
+    version="0.0.3",
     author="Chengqian Zhang",
     author_email="2043899742@qq.com",
     description="operators about first principle caculations",
@@ -26,6 +26,6 @@ setuptools.setup(
         "Operating System :: OS Independent",
     ],
     python_requires='>=3.7',
-    provides=["fpoptest"],
+    provides=["fpop"],
     scripts=[]
 )

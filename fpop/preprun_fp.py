@@ -24,11 +24,12 @@ from dflow.python import(
 )
 
 from dflow.plugins.dispatcher import DispatcherExecutor
-from dflow.plugins.lebesgue import LebesgueExecutor
 import os,sys
 from typing import Optional, Set, List
 from pathlib import Path
-from copy import deepcopy
+from fpop.utils.step_config import (
+    init_executor,
+)
 
 class PrepRunFp(Steps):
     def __init__(
@@ -127,6 +128,15 @@ def _prep_run_fp(
     if not run_template_config: run_template_config = {}
     if not run_slice_config: run_slice_config = {}
     if not run_step_config: run_step_config = {}
+    if "executor" in prep_step_config.keys():
+        prep_executor = init_executor(prep_step_config.pop("executor"))
+    else:
+        prep_executor = None
+    if "executor" in run_step_config.keys():
+        run_executor = init_executor(run_step_config.pop("executor"))
+    else:
+        run_executor = None
+
     prep_fp = Step(
         'prep-fp' , 
         template=PythonOPTemplate(
@@ -149,6 +159,7 @@ def _prep_run_fp(
             "optional_artifact" : prep_run_steps.inputs.artifacts['optional_artifact'],
         },
         key = step_keys['prep-fp'],
+        executor = prep_executor,
         **prep_step_config,    
     )
     prep_run_steps.add(prep_fp)
@@ -182,6 +193,7 @@ def _prep_run_fp(
         },
         with_sequence=argo_sequence(argo_len(prep_fp.outputs.parameters["task_names"]), format='%06d'),
         key = step_keys['run-fp'],
+        executor = run_executor,
         **run_step_config,
     )
     prep_run_steps.add(run_fp)

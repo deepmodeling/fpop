@@ -1,5 +1,3 @@
-import sys,os
-sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__),"../../")))
 from dflow import (
     Workflow,
     Step,
@@ -24,35 +22,32 @@ from pathlib import Path
 from fpop.vasp import PrepVasp,VaspInputs,RunVasp
 from fpop.preprun_fp import PrepRunFp
 from dflow.plugins.dispatcher import DispatcherExecutor
-upload_packages.append("../../fpop")
-from copy import deepcopy
 
-fp_config={
-    "prep":{
-        "template_config": {},
-    },
-    "run":{
-        "command": "source /opt/intel/oneapi/setvars.sh && ulimit -s unlimited && mpirun -n 64 /opt/vasp.5.4.4/bin/vasp_std",
-        "template_config": {},
+prep_template_config={}
+prep_step_config={}
+run_template_config={}
+run_slice_config={}
+run_step_config={
         "executor":{
-            "type":"dispatcher",
+            "type": "dispatcher",
             "machine_dict":{
-                "batch_type": "",
-                "context_type": "",
+                "batch_type": "Bohrium",
+                "context_type": "Bohrium",
                 "remote_profile": {
                     "input_data": {
                         "job_type": "container",
                         "platform": "ali",
                         "scass_type": "c16_m32_cpu",
-                    },
-                },
-            },
-        },
-    },
-}
-
-prep_config = fp_config["prep"]
-run_config = fp_config["run"]
+                        }
+                    }
+                }
+            }
+    }
+prep_image_config={}
+run_image_config={
+    "command": "source /opt/intel/oneapi/setvars.sh && ulimit -s unlimited && mpirun -n 64 /opt/vasp.5.4.4/bin/vasp_std",
+    }
+upload_python_packages=["/opt/mamba/lib/python3.10/site-packages/fpop"]
 
 steps = PrepRunFp(
     "prep-run-vasp",
@@ -60,8 +55,12 @@ steps = PrepRunFp(
     RunVasp,
     "prep_image",
     "run_image",
-    prep_config,
-    run_config,
+    prep_template_config,
+    prep_step_config,
+    run_template_config,
+    run_slice_config,
+    run_step_config,
+    upload_python_packages, 
 )
 
 confs = ["POSCAR"]
@@ -72,10 +71,11 @@ prep_run_step = Step(
     template = steps,
     parameters = {
         'type_map' : ["Na"],
-        'config' : fp_config,
+        'prep_image_config' : prep_image_config,
+        'run_image_config' : run_image_config,
         'inputs' : vasp_inputs,
         'optional_input' : {"conf_format":"vasp/poscar"},
-        'backward_list' : ["OUTCAR"],
+        'backward_list' : ["OUTCAR","CONTCAR"],
     },
     artifacts = {
         "confs" : upload_artifact(confs),
