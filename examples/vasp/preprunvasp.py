@@ -47,7 +47,7 @@ prep_image_config={}
 run_image_config={
     "command": "source /opt/intel/oneapi/setvars.sh && ulimit -s unlimited && mpirun -n 64 /opt/vasp.5.4.4/bin/vasp_std",
     }
-upload_python_packages=[Path("/opt/mamba/lib/python3.10/site-packages/fpop")]
+upload_python_packages=["/opt/mamba/lib/python3.10/site-packages/fpop"]
 
 steps = PrepRunFp(
     "prep-run-vasp",
