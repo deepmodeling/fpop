@@ -8,10 +8,10 @@ setuptools.setup(
     version="0.0.3",
     author="Chengqian Zhang",
     author_email="2043899742@qq.com",
-    description="operators about first principle caculations",
+    description="Operators related to first-principles calculation",
     long_description=long_description,
     long_description_content_type="text/markdown",
-    url="https://github.com/Chengqian-Zhang/FP_OPs",
+    url="https://github.com/deepmodeling/fpop",
     packages=setuptools.find_packages(),
     install_requires=[
         "pydflow",
