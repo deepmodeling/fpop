@@ -159,8 +159,9 @@ class RunFp(OP, ABC):
         input_files = [(Path(task_path) / ii).resolve() for ii in input_files]
         work_dir = Path(task_name)
         opt_input_files = []
-        for ss,vv in ip["optional_artifact"].items():
-            opt_input_files.append(ss)
+        if ip["optional_artifact"]:
+            for ss,vv in ip["optional_artifact"].items():
+                opt_input_files.append(ss)
         opt_input_files = [(Path(task_path) / ii).resolve() for ii in opt_input_files]
 
         with set_directory(work_dir,mkdir=True):
