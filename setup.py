@@ -5,7 +5,7 @@ with open("README.md", "r") as fh:
 
 setuptools.setup(
     name="fpop",
-    version="0.0.4",
+    version="0.0.5",
     author="Chengqian Zhang",
     author_email="2043899742@qq.com",
     description="Operators related to first-principles calculation",
