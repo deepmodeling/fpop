@@ -19,6 +19,7 @@ from dflow.python import (
     upload_packages,
 )
 from pathlib import Path
+import fpop
 from fpop.vasp import PrepVasp,VaspInputs,RunVasp
 from fpop.preprun_fp import PrepRunFp
 from dflow.plugins.dispatcher import DispatcherExecutor
