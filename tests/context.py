@@ -15,7 +15,5 @@ else:
 # one needs to set proper values for the following variable.
 default_image = 'dptechnology/dpgen2:latest'
 if os.getenv("DFLOW_DEBUG"):
-    from dflow import (
-        config,
-    )
-    config["mode"] = "debug"
+    import dflow
+    dflow.config["mode"] = "debug"
