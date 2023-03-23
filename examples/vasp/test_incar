@@ -28,6 +28,6 @@ LCHARG=F
 LWAVE=F
 
 #Make it faster
-NPAR = 8
-KGAMMA = False
-LREAL=A
+#NPAR = 8
+#KGAMMA = False
+#LREAL=A

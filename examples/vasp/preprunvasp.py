@@ -19,6 +19,7 @@ from dflow.python import (
     upload_packages,
 )
 from pathlib import Path
+import fpop
 from fpop.vasp import PrepVasp,VaspInputs,RunVasp
 from fpop.preprun_fp import PrepRunFp
 from dflow.plugins.dispatcher import DispatcherExecutor
@@ -47,7 +48,7 @@ prep_image_config={}
 run_image_config={
     "command": "source /opt/intel/oneapi/setvars.sh && ulimit -s unlimited && mpirun -n 64 /opt/vasp.5.4.4/bin/vasp_std",
     }
-upload_python_packages=["/opt/mamba/lib/python3.10/site-packages/fpop"]
+upload_python_packages=fpop.__path__
 
 steps = PrepRunFp(
     "prep-run-vasp",
@@ -63,9 +64,9 @@ steps = PrepRunFp(
     upload_python_packages, 
 )
 
-confs = ["POSCAR"]
+confs = ["POSCAR-1","POSCAR-2","POSCAR-3"]
 
-vasp_inputs = VaspInputs(0.2,'test_incar',{'Na':'test_potcar'},True) # kspacing  incar  potcar kgamma
+vasp_inputs = VaspInputs(0.4,'test_incar',{'Na':'test_potcar'},True) # kspacing  incar  potcar kgamma
 prep_run_step = Step(
     'prep-run-step', 
     template = steps,
