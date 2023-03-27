@@ -1,5 +1,5 @@
 import os
-from dflow import config
+from dflow.config import config
 from dflow.plugins.dispatcher import DispatcherExecutor
 
 def init_executor(
