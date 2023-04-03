@@ -72,7 +72,7 @@ class TestInputFiles(RunFp):
         backward_list: List[str],
         run_image_config: Optional[Dict]=None,
         optional_input: Optional[Dict]=None,
-    ) -> str:
+    ):
         pass
 
 class TestInputFiles2(RunFp):
@@ -86,5 +86,5 @@ class TestInputFiles2(RunFp):
         backward_list: List[str],
         run_image_config: Optional[Dict]=None,
         optional_input: Optional[Dict]=None,
-    ) -> str:
+    ):
         pass
