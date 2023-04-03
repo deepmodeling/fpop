@@ -11,9 +11,10 @@ upload_packages.append(__file__)
 
 import os, json, shutil, re, pickle, glob
 from pathlib import Path
-from typing import Tuple, List
+from typing import Tuple, List, Optional, Dict
 from context import fpop
 from fpop.vasp import RunVasp
+from fpop.run_fp import RunFp
 
 class MockedRunVasp(RunVasp):
     @OP.exec_sign_check
@@ -63,4 +64,27 @@ class MockedRunVasp(RunVasp):
         })
 
 
-    
+class TestInputFiles(RunFp):
+    def run_task(
+        self,
+        backward_dir_name,
+        log_name,
+        backward_list: List[str],
+        run_image_config: Optional[Dict]=None,
+        optional_input: Optional[Dict]=None,
+    ):
+        pass
+
+class TestInputFiles2(RunFp):
+    def input_files(self, task_path) -> List[str]:
+        return ["abc","ee"]
+
+    def run_task(
+        self,
+        backward_dir_name,
+        log_name,
+        backward_list: List[str],
+        run_image_config: Optional[Dict]=None,
+        optional_input: Optional[Dict]=None,
+    ):
+        pass
