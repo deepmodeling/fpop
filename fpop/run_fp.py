@@ -69,7 +69,6 @@ class RunFp(OP, ABC):
             }
         )
 
-    @abstractmethod
     def input_files(self, task_path) -> List[str]:
         r'''The mandatory input files to run a FP task.
         Returns
