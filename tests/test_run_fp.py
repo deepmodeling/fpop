@@ -18,7 +18,7 @@ class TestRunInputFiles(unittest.TestCase):
     def test_default(self):
         fake = TestInputFiles()
         result = fake.input_files('task')
-        self.assertEqual(result,['efg', '123', 'oo'])
+        self.assertEqual(result,['123', 'oo', 'efg'])
 
     def test_rewrite(self):
         fake = TestInputFiles2()
