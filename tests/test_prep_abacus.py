@@ -173,13 +173,14 @@ class TestPrepAbacusConf(TestPrepAbacus,unittest.TestCase):
         for ii in step.outputs.parameters['task_names'].value:
             self.assertEqual(Path(Path(ii)/'TEST').read_text(), "here test")
 
-    def testWithoutOptionalArtifact(self):
+    def testWithoutOptionalParam(self):
         wf = Workflow(name = "test")
         abacus = Step(
             name="PrepAbacus",
             template=PythonOPTemplate(PrepAbacus,image=default_image),
             artifacts={
                 "confs":upload_artifact(self.confs),
+                "optional_artifact":upload_artifact({"TEST":(self.source_path/'optional_test')})
             },
             parameters={
                 "inputs" : self.abacus_inputs ,
