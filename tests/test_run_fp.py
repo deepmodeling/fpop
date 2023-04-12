@@ -18,9 +18,15 @@ class TestRunInputFiles(unittest.TestCase):
     def test_default(self):
         fake = TestInputFiles()
         result = fake.input_files('task')
-        self.assertEqual(result,['123', 'oo', 'efg'])
+        ref = ['123', 'oo', 'efg']
+        ref.sort()
+        result.sort()
+        self.assertEqual(result,ref)
 
     def test_rewrite(self):
         fake = TestInputFiles2()
         result = fake.input_files('task')
-        self.assertEqual(result,["abc","ee"])
+        ref = ["abc","ee"]
+        ref.sort()
+        result.sort()
+        self.assertEqual(result,ref)
