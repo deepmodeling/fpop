@@ -167,7 +167,6 @@ class TestAbacusFunctions(unittest.TestCase):
     
     def test_GetPporbdpksFromStru(self):
         stru_data = get_pporbdpks_from_stru("STRU")
-        self.assertTrue(stru_data != None)
         self.assertTrue(stru_data["pp"],["./Ga_ONCV_PBE-1.0.upf","./As_ONCV_PBE-1.0.upf"])
         self.assertTrue(stru_data["orb"],["./Ga_gga_9au_100Ry_2s2p2d.orb","./As_gga_8au_100Ry_2s2p1d.orb"])
         self.assertTrue(stru_data["dpks"],"jle.orb")

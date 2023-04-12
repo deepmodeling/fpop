@@ -263,7 +263,7 @@ def get_pporbdpks_from_stru(stru: str= "STRU"):
         "NUMERICAL_DESCRIPTOR",
     ]
     if not os.path.isfile(stru):
-        return None
+        return {}
     with open(stru) as f1: lines = f1.readlines()      
     def get_block(keyname):
         block = []
@@ -314,10 +314,10 @@ def get_pporbdpks_from_stru(stru: str= "STRU"):
 class AbacusInputs():
     def __init__(
             self,
-            input_file,
+            input_file: Union[str,Path],
             pp_files: Dict[str, str],
             element_mass: Optional[Dict[str,float]] = None,
-            kpt_file: Optional[str] = None,
+            kpt_file: Optional[Union[str,Path]] = None,
             orb_files: Optional[Dict] = None,
             deepks_descriptor: Optional[str] = None,
             deepks_model: Optional[str] = None
@@ -364,7 +364,7 @@ class AbacusInputs():
             out_dict[k] = (os.path.split(v)[1],Path(v).read_text())
         return out_dict
 
-    def set_input(self, key:str, value:str):
+    def set_input(self, key:str, value:Any):
         #if set the value to be None, can remove the key
         if value == None:
             del self._input[key.strip().lower()]
@@ -439,7 +439,7 @@ class AbacusInputs():
         if self._kpt_file:
             Path(kptf).write_text(self._kpt_file)
 
-    def write_pporb(self,element_list : List[str]) -> List[List]:
+    def write_pporb(self,element_list : List[str]):
         """Based on element list, write the pp/orb files, and return a list of the filename. 
 
         Parameters
