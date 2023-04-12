@@ -314,7 +314,7 @@ def get_pporbdpks_from_stru(stru: str= "STRU"):
 class AbacusInputs():
     def __init__(
             self,
-            input_file: str,
+            input_file,
             pp_files: Dict[str, str],
             element_mass: Optional[Dict[str,float]] = None,
             kpt_file: Optional[str] = None,
@@ -402,7 +402,7 @@ class AbacusInputs():
         return self._deepks_model
 
     @staticmethod
-    def read_inputf(inputf: str) -> Dict[str,str]:
+    def read_inputf(inputf: str) -> dict:
         """Read INPUT and transfer to a dict.
 
         Parameters
@@ -469,7 +469,7 @@ class AbacusInputs():
 
         return [pp,orb]     
 
-    def write_deepks(self) -> str:
+    def write_deepks(self):
         """Check if INPUT is a deepks job, if yes, will return the deepks descriptor file name, 
         else will return None.
 
@@ -486,12 +486,14 @@ class AbacusInputs():
             need_model = True 
 
         if need_descriptor:
+            assert(self._deepks_descriptor != None)
             descriptor_file = self._deepks_descriptor[0]
             Path(descriptor_file).write_text(self._deepks_descriptor[1])
         else:
             descriptor_file = None
 
         if need_model:
+            assert(self._deepks_model != None)
             Path(self._deepks_model[0]).write_bytes(self._deepks_model[1])
 
         return descriptor_file
@@ -572,16 +574,18 @@ class RunAbacus(RunFp):
         files = ["INPUT","STRU"]
         if os.path.isfile("KPT"):
             files.append("KPT")
-
+            
+        files_tmp = []
         #read STRU
         stru_data = get_pporbdpks_from_stru("STRU")
-        orb_files = stru_data["orb"]
-        pp_files = stru_data["pp"]
-        dpks_descriptor = stru_data["dpks"]
+        if stru_data != None:
+            orb_files = stru_data["orb"]
+            pp_files = stru_data["pp"]
+            dpks_descriptor = stru_data["dpks"]
 
-        files_tmp = pp_files
-        if orb_files: files_tmp += orb_files
-        if dpks_descriptor: files_tmp += [dpks_descriptor]
+            files_tmp += pp_files
+            if orb_files: files_tmp += orb_files
+            if dpks_descriptor: files_tmp += [dpks_descriptor]
 
         #read INPUT
         input = AbacusInputs.read_inputf("INPUT")
