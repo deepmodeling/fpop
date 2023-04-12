@@ -288,11 +288,12 @@ def get_pporbdpks_from_stru(stru: str= "STRU"):
     pp = []
     labels = []
     mass = []
-    for line in atomic_species:
-        sline = line.split()
-        labels.append(sline[0])
-        pp.append(sline[2])
-        mass.append(float(sline[1]))
+    if atomic_species:
+        for line in atomic_species:
+            sline = line.split()
+            labels.append(sline[0])
+            pp.append(sline[2])
+            mass.append(float(sline[1]))
         
     #read orbital
     if numerical_orbital == None:
@@ -315,11 +316,11 @@ class AbacusInputs():
             self,
             input_file: str,
             pp_files: Dict[str, str],
-            element_mass: Dict[str,float] = None,
-            kpt_file: str = None,
-            orb_files: Dict[str, str] = None,
-            deepks_descriptor: str = None,
-            deepks_model: str = None
+            element_mass: Optional[Dict[str,float]] = None,
+            kpt_file: Optional[str] = None,
+            orb_files: Optional[Dict] = None,
+            deepks_descriptor: Optional[str] = None,
+            deepks_model: Optional[str] = None
     ):     
         """The input information of an ABACUS job except for STRU.
 
@@ -438,7 +439,7 @@ class AbacusInputs():
         if self._kpt_file:
             Path(kptf).write_text(self._kpt_file)
 
-    def write_pporb(self,element_list : List[str]) -> List[List[str]]:
+    def write_pporb(self,element_list : List[str]) -> List[List]:
         """Based on element list, write the pp/orb files, and return a list of the filename. 
 
         Parameters
@@ -448,7 +449,7 @@ class AbacusInputs():
 
         Returns
         -------
-        List[List[str]]
+        List[List]
             a list of the list of pp files, and orbital files 
         """  
         need_orb = False
@@ -466,7 +467,7 @@ class AbacusInputs():
         if not orb: 
             orb = None
 
-        return pp,orb     
+        return [pp,orb]     
 
     def write_deepks(self) -> str:
         """Check if INPUT is a deepks job, if yes, will return the deepks descriptor file name, 
