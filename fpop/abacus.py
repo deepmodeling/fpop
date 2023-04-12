@@ -315,12 +315,12 @@ class AbacusInputs():
     def __init__(
             self,
             input_file: Union[str,Path],
-            pp_files: Dict[str, str],
+            pp_files: Dict[str, Union[str,Path]],
             element_mass: Optional[Dict[str,float]] = None,
             kpt_file: Optional[Union[str,Path]] = None,
-            orb_files: Optional[Dict] = None,
-            deepks_descriptor: Optional[str] = None,
-            deepks_model: Optional[str] = None
+            orb_files: Optional[Dict[str, Union[str,Path]]] = None,
+            deepks_descriptor: Optional[Union[str,Path]] = None,
+            deepks_model: Optional[Union[str,Path]] = None
     ):     
         """The input information of an ABACUS job except for STRU.
 
@@ -402,7 +402,7 @@ class AbacusInputs():
         return self._deepks_model
 
     @staticmethod
-    def read_inputf(inputf: str) -> dict:
+    def read_inputf(inputf: Union[str,Path]) -> dict:
         """Read INPUT and transfer to a dict.
 
         Parameters
