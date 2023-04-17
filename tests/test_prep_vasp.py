@@ -38,7 +38,7 @@ from context import (
         )
 from fpop.vasp import PrepVasp,VaspInputs
 from typing import List
-from constants import POSCAR_1_content,POSCAR_2_content
+from constants import POSCAR_1_content,POSCAR_2_content,dump_conf_from_poscar
 upload_packages.append("../fpop")
 upload_packages.append("./context.py")
 
@@ -62,28 +62,6 @@ def check_vasp_tasks(tcase, ntasks):
         tcase.assertEqual(potcar.read_text(),'here potcar')
         cc += 1
     return tdirs
-
-def dump_conf_from_poscar(
-        type, 
-        conf_list
-        ) -> List[str] :
-    for ii in range(len(conf_list)):
-        Path("POSCAR_%d"%ii).write_text(conf_list[ii])
-    if type == "deepmd/npy":
-        confs = []
-        for ii in range(len(conf_list)):
-            ls = dpdata.System("POSCAR_%d"%ii, fmt="vasp/poscar")
-            ls.to_deepmd_npy("data.%03d"%ii)
-            confs.append("data.%03d"%ii)
-            os.remove("POSCAR_%d"%ii)
-        return confs
-    elif type == "vasp/poscar":
-        confs = []
-        for ii in range(len(conf_list)):
-            confs.append("POSCAR_%d")
-        return confs
-    else:
-        return []
 
 class TestPrepVaspDpConf(unittest.TestCase):
     '''

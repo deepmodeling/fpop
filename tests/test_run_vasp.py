@@ -1,4 +1,4 @@
-import unittest
+import unittest,os
 from dflow.python import OPIO,TransientError
 import shutil
 from pathlib import Path
@@ -9,6 +9,7 @@ from mocked_ops import MockedRunVasp
 
 class TestRunVasp(unittest.TestCase):
     def setUp(self):
+        self.cwd = os.getcwd()
         self.task_path = Path('task/path')
         self.task_path.mkdir(parents=True, exist_ok=True)
         (self.task_path/'POSCAR').write_text('here poscar')
@@ -22,6 +23,7 @@ class TestRunVasp(unittest.TestCase):
         (Path(self.task_name)/'our_log').write_text('here log')
 
     def tearDown(self):
+        os.chdir(self.cwd)
         if Path('task').is_dir():
             shutil.rmtree('task')
         if Path(self.task_name).is_dir():

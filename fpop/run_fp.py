@@ -69,15 +69,14 @@ class RunFp(OP, ABC):
             }
         )
 
-    @abstractmethod
-    def input_files(self) -> List[str]:
+    def input_files(self, task_path) -> List[str]:
         r'''The mandatory input files to run a FP task.
         Returns
         -------
         files: List[str]
             A list of madatory input files names.
         '''
-        pass
+        return os.listdir(task_path)
 
     @abstractmethod
     def run_task(
@@ -155,7 +154,7 @@ class RunFp(OP, ABC):
         optional_input = ip["optional_input"]
         task_name = ip["task_name"]
         task_path = ip["task_path"]
-        input_files = self.input_files()
+        input_files = self.input_files(task_path)
         input_files = [(Path(task_path) / ii).resolve() for ii in input_files]
         work_dir = Path(task_name)
         opt_input_files = []
@@ -167,12 +166,12 @@ class RunFp(OP, ABC):
         with set_directory(work_dir,mkdir=True):
             # link input files
             for ii in input_files:
-                if not os.path.isfile(ii):
-                    raise FatalError(f"cannot file file {ii}")
+                if not os.path.exists(ii):
+                    raise FatalError(f"cannot file file/directory {ii}")
                 iname = ii.name
                 Path(iname).symlink_to(ii)
             for ii in opt_input_files:
-                if os.path.isfile(ii):
+                if os.path.exists(ii):
                     iname = ii.name
                     Path(iname).symlink_to(ii)
             backward_dir_name = self.run_task(backward_dir_name,log_name,backward_list,run_image_config,optional_input)

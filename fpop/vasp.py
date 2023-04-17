@@ -204,7 +204,7 @@ class PrepVasp(PrepFp):
 
 
 class RunVasp(RunFp):
-    def input_files(self) -> List[str]:
+    def input_files(self, task_path) -> List[str]:
         r'''The mandatory input files to run a vasp task.
         Returns
         -------
