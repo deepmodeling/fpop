@@ -606,7 +606,7 @@ class RunAbacus(RunFp):
         backward_dir_name,
         log_name,
         backward_list: List[str],
-        run_config: Optional[Dict]=None,
+        run_image_config: Optional[Dict]=None,
         optional_input: Optional[Dict]=None,
     ) -> str:
         r'''Defines how one FP task runs
@@ -618,9 +618,11 @@ class RunAbacus(RunFp):
             The name of log file.
         backward_list:
             The output files the users need.
-        run_config:
-            Keyword args defined by the developer.
-            The fp/run_config session of the input file will be passed to this function.
+        run_image_config:
+            Keyword args defined by the developer.For example:
+            {
+              "command": "source /opt/intel/oneapi/setvars.sh && mpirun -n 16 abacus"
+            }
         optional_input:
             The parameters developers need in runtime.
         
@@ -629,8 +631,8 @@ class RunAbacus(RunFp):
         backward_dir_name: str
             The directory name which containers the files users need.
         '''
-        if run_config:
-            command = run_config["command"]
+        if run_image_config:
+            command = run_image_config["command"]
         else:
             command = "abacus"
         # run abacus
