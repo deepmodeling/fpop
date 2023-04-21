@@ -1,6 +1,5 @@
 from abc import ABC,abstractmethod
 import os
-import dpdata
 from pathlib import Path
 from dflow.utils import set_directory
 from dflow.python import (
@@ -55,7 +54,7 @@ class PrepFp(OP, ABC):
     @abstractmethod
     def prep_task(
             self,
-            conf_frame: dpdata.System,
+            conf_frame,
             inputs: Any,
             prepare_image_config: Optional[Dict] = None,
             optional_input: Optional[Dict] = None,
@@ -117,6 +116,7 @@ class PrepFp(OP, ABC):
             - `task_names`: (`List[str]`) The name of tasks. Will be used as the identities of the tasks. The names of different tasks are different.
             - `task_paths`: (`Artifact(List[Path])`) The parepared working paths of the tasks. Contains all input files needed to start the FP. The order fo the Paths should be consistent with `op["task_names"]`
         """
+        import dpdata
 
         inputs = ip['inputs']
         confs = ip['confs']
@@ -153,7 +153,7 @@ class PrepFp(OP, ABC):
             self,
             idx,
             inputs,
-            conf_frame : dpdata.System,
+            conf_frame,
             prepare_image_config = None,
             optional_input = None,
             optional_artifact = None,
