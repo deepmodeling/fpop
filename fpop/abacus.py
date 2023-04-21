@@ -612,9 +612,6 @@ class RunAbacus(RunFp):
             The name of log file.
         backward_list:
             The output files the users need.
-        run_config:
-            Keyword args defined by the developer.
-            The fp/run_config session of the input file will be passed to this function.
         run_image_config:
             Keyword args defined by the developer.For example:
             {
@@ -630,7 +627,7 @@ class RunAbacus(RunFp):
         '''
         
         if run_image_config:
-            command = run_image_config["command"]        
+            command = run_image_config["command"]
         else:
             command = "abacus"
         # run abacus
