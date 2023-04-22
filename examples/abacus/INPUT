@@ -1,0 +1,17 @@
+INPUT_PARAMETERS
+calculation scf
+suffix ABACUS
+ntype 1
+symmetry 0
+ecutwfc 50.000000
+scf_thr 1.000000e-08
+scf_nmax 100
+cal_force 1
+cal_stress 1
+basis_type pw
+smearing_method mp
+smearing_sigma 0.014600
+mixing_type pulay
+mixing_beta 0.700000
+ks_solver dav
+kspacing 0.20000

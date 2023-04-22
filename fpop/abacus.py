@@ -1,6 +1,6 @@
 from fpop.prep_fp import PrepFp
 from fpop.run_fp import RunFp
-import dpdata, sys, subprocess, os, shutil,re
+import sys, subprocess, os, shutil,re
 from pathlib import Path
 from dflow.utils import run_command
 from typing import (
@@ -13,12 +13,6 @@ from typing import (
     Union,
 )
 import numpy as np
-from dargs import (
-    dargs, 
-    Argument, 
-    Variant, 
-    ArgumentEncoder,
-)
 from dflow.python import (
     OP,
     OPIO,
@@ -522,7 +516,7 @@ class AbacusInputs():
 class PrepAbacus(PrepFp):
     def prep_task(
             self,
-            conf_frame: dpdata.System,
+            conf_frame,
             abacus_inputs: AbacusInputs,
             prepare_image_config: Optional[Dict] = None,
             optional_input: Optional[Dict] = None,
@@ -631,6 +625,7 @@ class RunAbacus(RunFp):
         backward_dir_name: str
             The directory name which containers the files users need.
         '''
+        
         if run_image_config:
             command = run_image_config["command"]
         else:
@@ -649,7 +644,10 @@ class RunAbacus(RunFp):
         os.makedirs(Path(backward_dir_name))
         shutil.copyfile(log_name,Path(backward_dir_name)/log_name)
         for ii in backward_list:
-            shutil.copyfile(ii,Path(backward_dir_name)/ii)
+            try:
+                shutil.copyfile(ii,Path(backward_dir_name)/ii)
+            except:
+                shutil.copytree(ii,Path(backward_dir_name)/ii)
         return backward_dir_name
 
     def check_run_success(self,log_name):

@@ -19,7 +19,7 @@ from dflow import (
     OutputArtifact,
     ShellOPTemplate
 )
-import os, json, dpdata, shutil
+import os, json, shutil
 from pathlib import Path
 from typing import (
     Any,
@@ -31,13 +31,6 @@ from typing import (
     Union,
 )
 import numpy as np
-import dargs
-from dargs import (
-    dargs,
-    Argument,
-    Variant,
-    ArgumentEncoder,
-)
 
 class RunFp(OP, ABC):
     r'''Execute a first-principles (FP) task.
