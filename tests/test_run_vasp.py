@@ -53,7 +53,7 @@ class TestRunVasp(unittest.TestCase):
         work_dir = Path(self.task_name)
         # check call
         calls = [
-            call(' '.join(['myvasp', '>', 'our_log']), raise_error=False, try_bash=True),
+            call(' '.join(['myvasp', '>', 'our_log']), raise_error=False, try_bash=True, shell=True),
         ]
         mocked_run.assert_has_calls(calls)
         # check output
@@ -91,7 +91,7 @@ class TestRunVasp(unittest.TestCase):
         work_dir = Path(self.task_name)
         # check call
         calls = [
-            call(' '.join(['myvasp', '>', 'our_log']), raise_error=False, try_bash=True),
+            call(' '.join(['myvasp', '>', 'our_log']), raise_error=False, try_bash=True, shell=True),
         ]
         mocked_run.assert_has_calls(calls)
         # check output
@@ -125,7 +125,7 @@ class TestRunVasp(unittest.TestCase):
         )
         # check call
         calls = [
-            call(' '.join(['myvasp', '>', 'log']), raise_error=False, try_bash=True),
+            call(' '.join(['myvasp', '>', 'log']), raise_error=False, try_bash=True, shell=True),
         ]
         mocked_run.assert_has_calls(calls)
 
@@ -147,7 +147,7 @@ class TestRunVasp(unittest.TestCase):
         )
         # check call
         calls = [
-            call(' '.join(['myvasp', '>', 'log']), raise_error=False, try_bash=True),
+            call(' '.join(['myvasp', '>', 'log']), raise_error=False, try_bash=True, shell=True),
         ]
         mocked_run.assert_has_calls(calls)
 
