@@ -632,7 +632,11 @@ class RunAbacus(RunFp):
             command = "abacus"
         # run abacus
         command = " ".join([command, ">", log_name])
-        ret, out, err = run_command(command, raise_error=False, try_bash=True,)
+        kwargs = {"try_bash": True, "shell": True}
+        if run_image_config:
+            kwargs.update(run_image_config)
+            kwargs.pop("command", None)
+        ret, out, err = run_command(command, raise_error=False, **kwargs)
         if ret != 0:
             raise TransientError(
                 "abacus failed\n", "out msg", out, "\n", "err msg", err, "\n"

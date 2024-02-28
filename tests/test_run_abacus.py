@@ -70,7 +70,7 @@ class TestRunAbacus(unittest.TestCase):
         work_dir = Path(self.task_name)
         # check call
         calls = [
-            call(' '.join(['myabacus', '>', 'our_log']), raise_error=False, try_bash=True),
+            call(' '.join(['myabacus', '>', 'our_log']), raise_error=False, try_bash=True, shell=True),
         ]
         mocked_run.assert_has_calls(calls)
 
@@ -109,7 +109,7 @@ class TestRunAbacus(unittest.TestCase):
         )
         # check call
         calls = [
-            call(' '.join(['myabacus', '>', 'log']), raise_error=False, try_bash=True),
+            call(' '.join(['myabacus', '>', 'log']), raise_error=False, try_bash=True, shell=True),
         ]
         mocked_run.assert_has_calls(calls)
 
@@ -133,6 +133,6 @@ class TestRunAbacus(unittest.TestCase):
         # check call
 
         calls = [
-            call(' '.join(['myabacus', '>', 'log']), raise_error=False, try_bash=True),
+            call(' '.join(['myabacus', '>', 'log']), raise_error=False, try_bash=True, shell=True),
         ]
         mocked_run.assert_has_calls(calls)
