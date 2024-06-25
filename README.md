@@ -4,3 +4,6 @@
 ```
 pip install fpop
 ```
+# Develop Guide
+If you want to support a new first-principles computing software in `fpop`, you can refer to the writeup of `fpop/vasp.py` and `fpop/abacus.py`.
+Specifically, you need to rewrite the abstract method `prep_task` of class `PrepFp`, and rewrite `run_task` and `input_files`(if needed) methods of class `RunFp`.
