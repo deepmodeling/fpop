@@ -174,9 +174,11 @@ class RunCp2k(RunFp):
         """
         # Get the run command
         if run_image_config:
-            command = run_image_config["command"]
+            command = run_image_config.get("command")
+            if not command:
+                raise ValueError("Command not specified in run_image_config")
         else:
-            command = "cp2k" #这里不确定！！！！！
+            raise ValueError("run_image_config is missing")
         
         # Run CP2K command and write output to log file
         command = " ".join([command, ">", log_name])
@@ -221,9 +223,4 @@ class RunCp2k(RunFp):
         with open(log_name, "r") as f:
             lines = f.readlines()
         return any("The number of warnings for this run is" in line for line in lines)
-
-
-
-
-
-    
+        
