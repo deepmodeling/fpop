@@ -210,4 +210,3 @@ class TestPrepRunCp2kPoscarConf(unittest.TestCase):
         #check optional_artifact
         for ii in step.outputs.parameters['task_names'].value:
             self.assertEqual(Path(Path(ii)/'TEST').read_text(), "here test")
-
