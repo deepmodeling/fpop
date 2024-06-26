@@ -51,7 +51,7 @@ run_image_config={
 upload_python_packages=list(fpop.__path__)
 
 steps = PrepRunFp(
-    "prep-run-vasp",
+    "prep-run-cp2k",
     PrepCp2k,
     RunCp2k,
     "registry.dp.tech/dptech/prod-15842/ubuntu:22.04-py3.10-ase",
@@ -85,7 +85,7 @@ prep_run_step = Step(
     },
 )
 
-wf = Workflow(name="preprunvasp")
+wf = Workflow(name="prepruncp2k")
 wf.add(prep_run_step)
 wf.submit()
 
