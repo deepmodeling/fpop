@@ -17,8 +17,3 @@ class TestCP2KInputs(unittest.TestCase):
         iinp_file = 'template.inp'
         ci = Cp2kInputs(iinp_file)
         self.assertEqual(ci.inp_template, '&GLOBAL\n  PROJECT foo\n&END GLOBAL\n')
-
-
- 
-
-
