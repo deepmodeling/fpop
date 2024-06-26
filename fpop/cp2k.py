@@ -223,4 +223,3 @@ class RunCp2k(RunFp):
         with open(log_name, "r") as f:
             lines = f.readlines()
         return any("The number of warnings for this run is" in line for line in lines)
-        
