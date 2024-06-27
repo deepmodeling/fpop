@@ -145,7 +145,7 @@ def _prep_run_fp(
             output_artifact_archive={
                 "task_paths": None
             },
-            python_packages = upload_python_packages,
+            python_packages = upload_python_packages, # type: ignore
             image = prep_image,
             **prep_template_config,
         ),
@@ -176,7 +176,7 @@ def _prep_run_fp(
                 output_artifact = ["backward_dir"],
                 **run_slice_config,
             ),
-            python_packages = upload_python_packages,
+            python_packages = upload_python_packages, # type: ignore
             image = run_image,
             **run_template_config,
         ),
