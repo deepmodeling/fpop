@@ -42,7 +42,7 @@ from constants import POSCAR_1_content,POSCAR_2_content,dump_conf_from_poscar
 upload_packages.append("../fpop")
 upload_packages.append("./context.py")
 
-def check_vasp_tasks(tcase, ntasks):
+def check_cp2k_tasks(tcase, ntasks):
     cc = 0
     tdirs = []
     for ii in range (ntasks):
@@ -56,11 +56,11 @@ def check_vasp_tasks(tcase, ntasks):
         tcase.assertTrue(input.is_file())
         tcase.assertTrue(coord.is_file())
         tcase.assertTrue(cell.is_file())
-        tcase.assertEqual(input.read_text(),'here input')
+        tcase.assertEqual(input.read_text(),'&CP2K_INPUT\n&END CP2K_INPUT')
         cc += 1
     return tdirs
 
-class TestPrepVaspDpConf(unittest.TestCase):
+class TestPrepCp2kDpConf(unittest.TestCase):
     '''
     deepmd/npy format named ["data.000","data.001"].
     no optional_input or optional_artifact.
@@ -86,7 +86,7 @@ class TestPrepVaspDpConf(unittest.TestCase):
 
     def test(self):
         op = PrepCp2k()
-        vasp_inputs = Cp2kInputs(self.inp_file)
+        cp2k_inputs = Cp2kInputs(self.inp_file)
         out = op.execute(
             OPIO(
                 {
@@ -104,7 +104,7 @@ class TestPrepVaspDpConf(unittest.TestCase):
      
     def testWithoutOptionalParameter(self):
         op = PrepCp2k()
-        vasp_inputs = Cp2kInputs(self.inp_file)
+        cp2k_inputs = Cp2kInputs(self.inp_file)
         out = op.execute(
             OPIO(
                 {
@@ -185,7 +185,7 @@ class TestPrepRunCp2kPoscarConf(unittest.TestCase):
         ci = Cp2kInputs(self.inp_file)
         cp2k = Step(
             name="PrepCp2k",
-            template=PythonOPTemplate(PrepVasp,image=default_image),
+            template=PythonOPTemplate(PrepCp2k,image=default_image),
             artifacts={
                 "confs":upload_artifact(self.confs),
                 "optional_artifact":upload_artifact({"TEST":Path("optional_test")}),
@@ -204,7 +204,7 @@ class TestPrepRunCp2kPoscarConf(unittest.TestCase):
         step = wf.query_step(name="PrepCp2k")[0]
         download_artifact(step.outputs.artifacts["task_paths"])
 
-        tdirs = check_vasp_tasks(self, self.ntasks)
+        tdirs = check_cp2k_tasks(self, self.ntasks)
         self.assertEqual(tdirs, step.outputs.parameters['task_names'].value)
         
         #check optional_artifact
