@@ -1,4 +1,4 @@
-from abc import ABC
+from abc import ABCMeta
 from dflow import (
     InputParameter,
     OutputParameter,
@@ -36,8 +36,8 @@ class PrepRunFp(Steps):
     def __init__(
         self,
         name : str,
-        prep_op : Union[OP, ABC],
-        run_op : Union[OP, ABC],
+        prep_op : Union[OP, ABCMeta],
+        run_op : Union[OP, ABCMeta],
         prep_image : str,
         run_image : str,
         prep_template_config : Optional[dict] = None,
