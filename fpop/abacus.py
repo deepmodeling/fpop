@@ -517,7 +517,7 @@ class PrepAbacus(PrepFp):
     def prep_task(
             self,
             conf_frame,
-            abacus_inputs: AbacusInputs,
+            inputs: AbacusInputs,
             prepare_image_config: Optional[Dict] = None,
             optional_input: Optional[Dict] = None,
             optional_artifact: Optional[Dict] = None,
@@ -539,13 +539,13 @@ class PrepAbacus(PrepFp):
         """
 
         element_list = conf_frame['atom_names']
-        pp, orb = abacus_inputs.write_pporb(element_list)
-        dpks = abacus_inputs.write_deepks()
-        mass = abacus_inputs.get_mass(element_list)
+        pp, orb = inputs.write_pporb(element_list)
+        dpks = inputs.write_deepks()
+        mass = inputs.get_mass(element_list)
         conf_frame.to('abacus/stru', 'STRU', pp_file=pp,numerical_orbital=orb,numerical_descriptor=dpks,mass=mass)
         
-        abacus_inputs.write_input("INPUT")
-        abacus_inputs.write_kpt("KPT")
+        inputs.write_input("INPUT")
+        inputs.write_kpt("KPT")
 
         if optional_artifact:
             for file_name, file_path in optional_artifact.items():
@@ -636,7 +636,7 @@ class RunAbacus(RunFp):
         if run_image_config:
             kwargs.update(run_image_config)
             kwargs.pop("command", None)
-        ret, out, err = run_command(command, raise_error=False, **kwargs)
+        ret, out, err = run_command(command, raise_error=False, **kwargs) # type: ignore
         if ret != 0:
             raise TransientError(
                 "abacus failed\n", "out msg", out, "\n", "err msg", err, "\n"

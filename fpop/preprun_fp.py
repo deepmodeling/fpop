@@ -1,3 +1,4 @@
+from abc import ABCMeta
 from dflow import (
     InputParameter,
     OutputParameter,
@@ -25,7 +26,7 @@ from dflow.python import(
 
 from dflow.plugins.dispatcher import DispatcherExecutor
 import os,sys
-from typing import Optional, Set, List
+from typing import Optional, Set, List, Union
 from pathlib import Path
 from fpop.utils.step_config import (
     init_executor,
@@ -35,8 +36,8 @@ class PrepRunFp(Steps):
     def __init__(
         self,
         name : str,
-        prep_op : OP,
-        run_op : OP,
+        prep_op : Union[OP, ABCMeta],
+        run_op : Union[OP, ABCMeta],
         prep_image : str,
         run_image : str,
         prep_template_config : Optional[dict] = None,
@@ -44,7 +45,7 @@ class PrepRunFp(Steps):
         run_template_config : Optional[dict] = None,
         run_slice_config : Optional[dict] = None,
         run_step_config : Optional[dict] = None,
-        upload_python_packages : Optional[List[str]] = None,
+        upload_python_packages : Optional[Union[List[Path], List[str]]] = None,
     ):
         self._input_parameters = {
             "inputs" : InputParameter(),
@@ -112,8 +113,8 @@ class PrepRunFp(Steps):
 def _prep_run_fp(
         prep_run_steps,
         step_keys,
-        prep_op : OP,
-        run_op : OP,
+        prep_op : Union[OP, ABCMeta],
+        run_op : Union[OP, ABCMeta],
         prep_image,
         run_image,
         prep_template_config : Optional[dict] = None,
@@ -121,7 +122,7 @@ def _prep_run_fp(
         run_template_config : Optional[dict] = None,
         run_slice_config : Optional[dict] = None,
         run_step_config : Optional[dict] = None,
-        upload_python_packages : Optional[List[str]] = None,
+        upload_python_packages : Optional[Union[List[Path], List[str]]] = None,
 ):
     if not prep_template_config: prep_template_config = {}
     if not prep_step_config: prep_step_config = {}
@@ -144,7 +145,7 @@ def _prep_run_fp(
             output_artifact_archive={
                 "task_paths": None
             },
-            python_packages = upload_python_packages,
+            python_packages = upload_python_packages, # type: ignore
             image = prep_image,
             **prep_template_config,
         ),
@@ -175,7 +176,7 @@ def _prep_run_fp(
                 output_artifact = ["backward_dir"],
                 **run_slice_config,
             ),
-            python_packages = upload_python_packages,
+            python_packages = upload_python_packages, # type: ignore
             image = run_image,
             **run_template_config,
         ),
