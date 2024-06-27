@@ -4,7 +4,7 @@ import shutil
 from pathlib import Path
 from mock import mock, patch, call
 from context import fpop
-from fpop.vasp import RunCp2k
+from fpop.cp2k import RunCp2k
 
 
 class TestRunCp2k(unittest.TestCase):
@@ -32,13 +32,13 @@ class TestRunCp2k(unittest.TestCase):
     def test_success(self, mocked_run):
         mocked_run.side_effect = [ (0, 'out\n', '') ]
         op = RunCp2k()
-        def new_check_run_success(obj):
+        def new_check_run_success(obj, log_name):
             return True
         with mock.patch.object(RunCp2k, "check_run_success", new=new_check_run_success):
             out = op.execute(
                 OPIO({
                     'run_image_config' :{
-                        'command' : 'mycp2k',
+                        'command' : 'myCp2k',
                     },
                     'task_name' : self.task_name,
                     'task_path' : self.task_path,
@@ -52,7 +52,7 @@ class TestRunCp2k(unittest.TestCase):
         work_dir = Path(self.task_name)
         # check call
         calls = [
-            call(' '.join(['myvasp', '>', 'our_log']), raise_error=False, try_bash=True, shell=True),
+            call(' '.join(['myCp2k', '>', 'our_log']), raise_error=False, try_bash=True, shell=True),
         ]
         mocked_run.assert_has_calls(calls)
         # check output
@@ -70,13 +70,13 @@ class TestRunCp2k(unittest.TestCase):
     def test_success_without_optional_parameter(self, mocked_run):
         mocked_run.side_effect = [ (0, 'out\n', '') ]
         op = RunCp2k()
-        def new_check_run_success(obj):
+        def new_check_run_success(obj, log_name):
             return True
         with mock.patch.object(RunCp2k, "check_run_success", new=new_check_run_success):
             out = op.execute(
                 OPIO({
                     'run_image_config' :{
-                        'command' : 'mycp2k',
+                        'command' : 'myCp2k',
                     },
                     'task_name' : self.task_name,
                     'task_path' : self.task_path,
@@ -89,7 +89,7 @@ class TestRunCp2k(unittest.TestCase):
         work_dir = Path(self.task_name)
         # check call
         calls = [
-            call(' '.join(['mycp2k', '>', 'our_log']), raise_error=False, try_bash=True, shell=True),
+            call(' '.join(['myCp2k', '>', 'our_log']), raise_error=False, try_bash=True, shell=True),
         ]
         mocked_run.assert_has_calls(calls)
         # check output
@@ -111,7 +111,7 @@ class TestRunCp2k(unittest.TestCase):
             out = op.execute(
             OPIO({
                 'run_image_config' :{
-                    'command' : 'mycp2k',
+                    'command' : 'myCp2k',
                 },
                 'task_name' : self.task_name,
                 'task_path' : self.task_path,
@@ -122,7 +122,7 @@ class TestRunCp2k(unittest.TestCase):
         )
         # check call
         calls = [
-            call(' '.join(['mycp2k', '>', 'log']), raise_error=False, try_bash=True, shell=True),
+            call(' '.join(['myCp2k', '>', 'log']), raise_error=False, try_bash=True, shell=True),
         ]
         mocked_run.assert_has_calls(calls)
 
@@ -144,6 +144,6 @@ class TestRunCp2k(unittest.TestCase):
         )
         # check call
         calls = [
-            call(' '.join(['mycp2k', '>', 'log']), raise_error=False, try_bash=True, shell=True),
+            call(' '.join(['myCp2k', '>', 'log']), raise_error=False, try_bash=True, shell=True),
         ]
         mocked_run.assert_has_calls(calls)
