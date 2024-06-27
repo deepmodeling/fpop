@@ -3,3 +3,4 @@ lbg
 dpdata
 numpy
 dargs
+ase
