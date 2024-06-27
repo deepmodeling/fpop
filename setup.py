@@ -18,6 +18,7 @@ setuptools.setup(
         "lbg",
         "dpdata",
         "numpy",
+        "ase",
         "dargs",
     ],
     classifiers=[
