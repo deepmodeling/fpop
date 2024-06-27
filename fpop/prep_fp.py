@@ -25,7 +25,7 @@ from typing import (
 class PrepFp(OP, ABC):
     r"""Prepares the working directories for first-principles (FP) tasks.
 
-    A list of (same length as ip["confs"]) working directories
+    A list of (same length as op_in["confs"]) working directories
     containing all files needed to start FP tasks will be
     created. The paths of the directories will be returned as
     `op["task_paths"]`. The identities of the tasks are returned as
@@ -86,13 +86,13 @@ class PrepFp(OP, ABC):
     @OP.exec_sign_check
     def execute(
             self,
-            ip : OPIO,
+            op_in : OPIO,
     ) -> OPIO:
         r"""Execute the OP.
 
         Parameters
         ----------
-        ip : dict
+        op_in : dict
             Input dict with components:
 
             - `prep_image_config` : (`dict`) It defines the parameters of the process of preparing FP tasks.
@@ -118,12 +118,12 @@ class PrepFp(OP, ABC):
         """
         import dpdata
 
-        inputs = ip['inputs']
-        confs = ip['confs']
-        type_map = ip['type_map']
-        prepare_image_config = ip["prep_image_config"]
-        optional_artifact = ip["optional_artifact"]
-        optional_input = ip["optional_input"]
+        inputs = op_in['inputs']
+        confs = op_in['confs']
+        type_map = op_in['type_map']
+        prepare_image_config = op_in["prep_image_config"]
+        optional_artifact = op_in["optional_artifact"]
+        optional_input = op_in["optional_input"]
         try:
             conf_format = optional_input["conf_format"]
         except:
