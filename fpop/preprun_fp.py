@@ -26,7 +26,7 @@ from dflow.python import(
 
 from dflow.plugins.dispatcher import DispatcherExecutor
 import os,sys
-from typing import Optional, Set, List, Union, PathLike, Unknown
+from typing import Optional, Set, List, Union
 from pathlib import Path
 from fpop.utils.step_config import (
     init_executor,
@@ -45,7 +45,7 @@ class PrepRunFp(Steps):
         run_template_config : Optional[dict] = None,
         run_slice_config : Optional[dict] = None,
         run_step_config : Optional[dict] = None,
-        upload_python_packages : Optional[List[PathLike[Unknown]]] = None,
+        upload_python_packages : Optional[List[Union[Path, str]]] = None,
     ):
         self._input_parameters = {
             "inputs" : InputParameter(),
