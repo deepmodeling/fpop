@@ -74,7 +74,7 @@ class PrepCp2k(PrepFp):
     def prep_task(
             self,
             conf_frame: dpdata.System,
-            cp2k_inputs: Cp2kInputs,
+            inputs: Cp2kInputs,
             prepare_image_config: Optional[Dict] = None,
             optional_input: Optional[Dict] = None,
             optional_artifact: Optional[Dict] = None,
@@ -86,7 +86,7 @@ class PrepCp2k(PrepFp):
         ----------
         conf_frame : dpdata.System
             One frame of configuration in the dpdata format.
-        cp2k_inputs: Cp2kInputs
+        inputs: Cp2kInputs
             The Cp2kInputs object handles the input file of the task.
         prepare_image_config: Dict, optional
             Definition of runtime parameters in the process of preparing tasks.
@@ -116,7 +116,7 @@ class PrepCp2k(PrepFp):
             file.write(f"C {cell_params[2,0]:14.8f} {cell_params[2,1]:14.8f} {cell_params[2,2]:14.8f}\n")
 
         # Write the CP2K input file content
-        Path('input.inp').write_text(cp2k_inputs.inp_template)
+        Path('input.inp').write_text(inputs.inp_template)
 
         # Copy optional files to the working directory
         if optional_artifact:
@@ -188,7 +188,7 @@ class RunCp2k(RunFp):
             kwargs.pop("command", None)
         
         # Execute command
-        ret, out, err = run_command(command, raise_error=False, **kwargs)
+        ret, out, err = run_command(command, raise_error=False, **kwargs)  # type: ignore
         if ret != 0:
             raise TransientError(
                 "cp2k failed\n", "out msg", out, "\n", "err msg", err, "\n"
