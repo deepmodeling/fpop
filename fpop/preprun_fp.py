@@ -1,3 +1,4 @@
+from abc import ABC
 from dflow import (
     InputParameter,
     OutputParameter,
@@ -25,7 +26,7 @@ from dflow.python import(
 
 from dflow.plugins.dispatcher import DispatcherExecutor
 import os,sys
-from typing import Optional, Set, List
+from typing import Optional, Set, List, Union
 from pathlib import Path
 from fpop.utils.step_config import (
     init_executor,
@@ -35,8 +36,8 @@ class PrepRunFp(Steps):
     def __init__(
         self,
         name : str,
-        prep_op : OP,
-        run_op : OP,
+        prep_op : Union[OP, ABC],
+        run_op : Union[OP, ABC],
         prep_image : str,
         run_image : str,
         prep_template_config : Optional[dict] = None,
