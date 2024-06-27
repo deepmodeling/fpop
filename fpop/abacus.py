@@ -636,7 +636,7 @@ class RunAbacus(RunFp):
         if run_image_config:
             kwargs.update(run_image_config)
             kwargs.pop("command", None)
-        ret, out, err = run_command(command, raise_error=False, **kwargs)
+        ret, out, err = run_command(command, raise_error=False, **kwargs) # type: ignore
         if ret != 0:
             raise TransientError(
                 "abacus failed\n", "out msg", out, "\n", "err msg", err, "\n"
