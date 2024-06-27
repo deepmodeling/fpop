@@ -109,12 +109,12 @@ class RunFp(OP, ABC):
     @OP.exec_sign_check
     def execute(
         self,
-        ip: OPIO,
+        op_in: OPIO,
     ) -> OPIO:
         r'''Execute the OP.
         Parameters
         ----------
-        ip : dict
+        op_in : dict
             Input dict with components:
             - `task_name`: (`str`) The name of task.
             - `task_path`: (`Artifact(Path)`) The path that contains all input files prepareed by `PrepFp`.
@@ -140,19 +140,19 @@ class RunFp(OP, ABC):
         FatalError
             When mandatory files are not found.
         '''
-        run_image_config = ip["run_image_config"]
-        backward_dir_name = ip["backward_dir_name"] 
-        log_name = ip["log_name"] 
-        backward_list = ip["backward_list"]
-        optional_input = ip["optional_input"]
-        task_name = ip["task_name"]
-        task_path = ip["task_path"]
+        run_image_config = op_in["run_image_config"]
+        backward_dir_name = op_in["backward_dir_name"] 
+        log_name = op_in["log_name"] 
+        backward_list = op_in["backward_list"]
+        optional_input = op_in["optional_input"]
+        task_name = op_in["task_name"]
+        task_path = op_in["task_path"]
         input_files = self.input_files(task_path)
         input_files = [(Path(task_path) / ii).resolve() for ii in input_files]
         work_dir = Path(task_name)
         opt_input_files = []
-        if ip["optional_artifact"]:
-            for ss,vv in ip["optional_artifact"].items():
+        if op_in["optional_artifact"]:
+            for ss,vv in op_in["optional_artifact"].items():
                 opt_input_files.append(ss)
         opt_input_files = [(Path(task_path) / ii).resolve() for ii in opt_input_files]
 

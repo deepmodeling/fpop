@@ -73,7 +73,7 @@ class TestInputFiles(RunFp):
         run_image_config: Optional[Dict]=None,
         optional_input: Optional[Dict]=None,
     ):
-        pass
+        return "mock"
 
 class TestInputFiles2(RunFp):
     def input_files(self, task_path) -> List[str]:
@@ -87,4 +87,4 @@ class TestInputFiles2(RunFp):
         run_image_config: Optional[Dict]=None,
         optional_input: Optional[Dict]=None,
     ):
-        pass
+        return "mock"

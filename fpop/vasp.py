@@ -155,7 +155,7 @@ class PrepVasp(PrepFp):
     def prep_task(
             self,
             conf_frame: dpdata.System,
-            vasp_inputs: VaspInputs,
+            inputs: VaspInputs,
             prepare_image_config: Optional[Dict] = None,
             optional_input: Optional[Dict] = None,
             optional_artifact: Optional[Dict] = None,
@@ -186,15 +186,15 @@ class PrepVasp(PrepFp):
 
         conf_frame.to('vasp/poscar', 'POSCAR')
         Path('INCAR').write_text(
-            vasp_inputs.incar_template
+            inputs.incar_template
         )
         # fix the case when some element have 0 atom, e.g. H0O2
         tmp_frame = dpdata.System('POSCAR', fmt='vasp/poscar')
         Path('POTCAR').write_text(
-            vasp_inputs.make_potcar(tmp_frame['atom_names'])
+            inputs.make_potcar(tmp_frame['atom_names'])
         )
         Path('KPOINTS').write_text(
-            vasp_inputs.make_kpoints(conf_frame['cells'][0])
+            inputs.make_kpoints(conf_frame['cells'][0])
         )
 
         if optional_artifact:
