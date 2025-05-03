@@ -43,7 +43,7 @@ class TestAbacusInputs(unittest.TestCase):
         self.assertTrue(os.path.isfile("KPT"))
         self.assertTrue(os.path.isfile("H.upf"))
         self.assertFalse(os.path.isfile("O.upf"))
-        self.assertFalse(os.path.isfile("H.orb"))
+        self.assertTrue(os.path.isfile("H.orb"))
         self.assertFalse(os.path.isfile("O.orb"))
 
         self.assertEqual("INPUT_PARAMETERS", Path("INPUT").read_text().split("\n")[0])
@@ -52,6 +52,7 @@ class TestAbacusInputs(unittest.TestCase):
 
         self.assertEqual(Path("KPT").read_text(),"tkpt")
         self.assertEqual(Path("H.upf").read_text(),"tH.upf")
+        self.assertEqual(Path("H.orb").read_text(),"tH.orb")
     
     def test_writefile2(self):
         abacusinput = AbacusInputs(input_file="../INPUT",
@@ -67,8 +68,8 @@ class TestAbacusInputs(unittest.TestCase):
         self.assertTrue(os.path.isfile("KPT"))
         self.assertTrue(os.path.isfile("H.upf"))
         self.assertTrue(os.path.isfile("O.upf"))
-        self.assertFalse(os.path.isfile("H.orb"))
-        self.assertFalse(os.path.isfile("O.orb"))
+        self.assertTrue(os.path.isfile("H.orb"))
+        self.assertTrue(os.path.isfile("O.orb"))
     
     def test_writefile3(self):
         abacusinput = AbacusInputs(input_file="../INPUT",

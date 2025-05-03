@@ -162,10 +162,18 @@ class RunFp(OP, ABC):
                 if not os.path.exists(ii):
                     raise FatalError(f"cannot file file/directory {ii}")
                 iname = ii.name
+                if os.path.isfile(iname):
+                    os.remove(iname)
+                elif os.path.isdir(iname):
+                    shutil.rmtree(iname)
                 Path(iname).symlink_to(ii)
             for ii in opt_input_files:
                 if os.path.exists(ii):
                     iname = ii.name
+                    if os.path.isfile(iname):
+                        os.remove(iname)
+                    elif os.path.isdir(iname):
+                        shutil.rmtree(iname)
                     Path(iname).symlink_to(ii)
             backward_dir_name = self.run_task(backward_dir_name,log_name,backward_list,run_image_config,optional_input)
 

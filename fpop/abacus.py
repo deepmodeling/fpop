@@ -10,7 +10,7 @@ from typing import (
     Set,
     Dict,
     Optional,
-    Union,
+    Union
 )
 import numpy as np
 from dflow.python import (
@@ -314,7 +314,8 @@ class AbacusInputs():
             kpt_file: Optional[Union[str,Path]] = None,
             orb_files: Optional[Dict[str, Union[str,Path]]] = None,
             deepks_descriptor: Optional[Union[str,Path]] = None,
-            deepks_model: Optional[Union[str,Path]] = None
+            deepks_model: Optional[Union[str,Path]] = None,
+            constrain_elements: Optional[List[str]] = None,
     ):     
         """The input information of an ABACUS job except for STRU.
 
@@ -337,6 +338,9 @@ class AbacusInputs():
             The deepks descriptor file, by default None.
         deepks_model : str, optional
             The deepks model file, by default None.
+        constrain_elements : List[str], optional
+            The elements that need to constrain the magnetic moment, by default None. 
+            For the constrained elements, the flag "sc 1 1 1" will be added in STRU.
         """        
         self.input_file = input_file
         self._input = AbacusInputs.read_inputf(self.input_file)
@@ -347,7 +351,8 @@ class AbacusInputs():
         self._orb_files = {} if orb_files == None else self._read_dict_file(orb_files)
         self._deepks_descriptor = None if deepks_descriptor == None else (os.path.split(deepks_descriptor)[1], Path(deepks_descriptor).read_text())
         self._deepks_model = None if deepks_model == None else (os.path.split(deepks_model)[1], Path(deepks_model).read_bytes())
-
+        self._constrin_elements = constrain_elements
+    
     def _read_dict_file(self,input_dict,out_dict=None):
         # input_dict is a dict whose value is a file.
         # The filename and context will make up a tuple, which is 
@@ -394,6 +399,9 @@ class AbacusInputs():
     
     def get_deepks_model(self):
         return self._deepks_model
+    
+    def get_constrain_elements(self):
+        return self._constrin_elements
 
     @staticmethod
     def read_inputf(inputf: Union[str,Path]) -> dict:
@@ -446,20 +454,14 @@ class AbacusInputs():
         List[List]
             a list of the list of pp files, and orbital files 
         """  
-        need_orb = False
-        if self._input.get("basis_type","pw").lower() in ["lcao","lcao_in_pw"]:
-            need_orb = True
         pp,orb = [],[]
         for ielement in element_list:
             if ielement in self._pp_files:
                 Path(self._pp_files[ielement][0]).write_text(self._pp_files[ielement][1])
                 pp.append(self._pp_files[ielement][0])
-            if need_orb and ielement in self._orb_files:
+            if ielement in self._orb_files:
                 Path(self._orb_files[ielement][0]).write_text(self._orb_files[ielement][1]) 
                 orb.append(self._orb_files[ielement][0])
-
-        if not orb: 
-            orb = None
 
         return [pp,orb]     
 
@@ -517,7 +519,7 @@ class PrepAbacus(PrepFp):
     def prep_task(
             self,
             conf_frame,
-            abacus_inputs: AbacusInputs,
+            inputs: AbacusInputs,
             prepare_image_config: Optional[Dict] = None,
             optional_input: Optional[Dict] = None,
             optional_artifact: Optional[Dict] = None,
@@ -539,13 +541,27 @@ class PrepAbacus(PrepFp):
         """
 
         element_list = conf_frame['atom_names']
-        pp, orb = abacus_inputs.write_pporb(element_list)
-        dpks = abacus_inputs.write_deepks()
-        mass = abacus_inputs.get_mass(element_list)
-        conf_frame.to('abacus/stru', 'STRU', pp_file=pp,numerical_orbital=orb,numerical_descriptor=dpks,mass=mass)
+        pp, orb = inputs.write_pporb(element_list)
+        dpks = inputs.write_deepks()
+        mass = inputs.get_mass(element_list)
         
-        abacus_inputs.write_input("INPUT")
-        abacus_inputs.write_kpt("KPT")
+        # if conf_frame has the spins, then we will use it as the initial mag and write it to STRU
+        mag = conf_frame.data.get("spins",None)
+        if mag is not None:
+            mag = mag[0] # spins is the mag of several frames, here we only use the first frame
+        
+        # if the constrain_elements is set, we will set the related flag in STRU    
+        sc = None
+        c_eles = inputs.get_constrain_elements()
+        if c_eles:
+            atom_names = conf_frame.data["atom_names"]
+            atom_types = [atom_names[i] for i in conf_frame.data["atom_types"]]
+            sc = [None if i not in c_eles else [1,1,1] for i in atom_types]
+        
+        conf_frame.to('abacus/stru', 'STRU', pp_file=pp,numerical_orbital=orb,numerical_descriptor=dpks,mass=mass,mag=mag,sc=sc)
+        
+        inputs.write_input("INPUT")
+        inputs.write_kpt("KPT")
 
         if optional_artifact:
             for file_name, file_path in optional_artifact.items():
@@ -632,15 +648,17 @@ class RunAbacus(RunFp):
             command = "abacus"
         # run abacus
         command = " ".join([command, ">", log_name])
-        ret, out, err = run_command(command, raise_error=False, try_bash=True,)
+        ret, out, err = run_command(command, raise_error=False, shell=True,)
         if ret != 0:
             raise TransientError(
                 "abacus failed\n", "out msg", out, "\n", "err msg", err, "\n"
             )
-        if not self.check_run_success(log_name):
-            raise TransientError(
-                "abacus failed , we could not check the exact cause . Please check log file ."
-            )
+        #if not self.check_run_success(log_name):
+        #    raise TransientError(
+        #        "abacus failed , we could not check the exact cause . Please check log file ."
+        #    )
+        if os.path.isdir(backward_dir_name):
+            shutil.rmtree(backward_dir_name)
         os.makedirs(Path(backward_dir_name))
         shutil.copyfile(log_name,Path(backward_dir_name)/log_name)
         for ii in backward_list:

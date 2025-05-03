@@ -21,6 +21,7 @@ from typing import (
     Optional,
     Union,
 )
+import dpdata
 
 class PrepFp(OP, ABC):
     r"""Prepares the working directories for first-principles (FP) tasks.
@@ -116,7 +117,7 @@ class PrepFp(OP, ABC):
             - `task_names`: (`List[str]`) The name of tasks. Will be used as the identities of the tasks. The names of different tasks are different.
             - `task_paths`: (`Artifact(List[Path])`) The parepared working paths of the tasks. Contains all input files needed to start the FP. The order fo the Paths should be consistent with `op["task_names"]`
         """
-        import dpdata
+        
 
         inputs = ip['inputs']
         confs = ip['confs']
@@ -135,6 +136,7 @@ class PrepFp(OP, ABC):
         #System
         counter = 0
         # loop over list of System
+        self._register_spin()
         for system in confs:
             ss = dpdata.System(system, fmt=conf_format, labeled=False)
             for ff in range(ss.get_nframes()):
@@ -148,6 +150,17 @@ class PrepFp(OP, ABC):
             'task_paths' : task_paths,
         })
 
+    def _register_spin(self):
+        from dpdata.data_type import Axis, DataType
+        import numpy as np
+        dt = DataType(
+            "spins",
+            np.ndarray,
+            (Axis.NFRAMES, Axis.NATOMS, 3),
+            required=False,
+            deepmd_name="spin",
+        )
+        dpdata.System.register_data_type(dt)
 
     def _exec_one_frame(
             self,
